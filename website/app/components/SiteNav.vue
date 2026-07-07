@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { navigateTo } from "#app";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const scrolled = ref(false);
