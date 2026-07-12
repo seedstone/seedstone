@@ -2,26 +2,31 @@
 const HOW_STEPS = [
   {
     n: "01",
-    title: "Type any string",
-    desc: "A name, address, ID, filename — anything you already use as an identifier.",
+    title: "Enter any string",
+    desc: "Start with a name, wallet address, AI agent, company, domain, or any piece of text."
   },
   {
     n: "02",
-    title: "One input, one seed",
-    desc: "Your string is hashed into a stable seed. The same input always produces the exact same result.",
+    title: "Generate a unique fingerprint",
+    desc: "Seedstone transforms your input into a deterministic visual fingerprint that is unique to that string."
   },
   {
     n: "03",
-    title: "Forge the gem",
-    desc: "Statistically independent visual properties are derived from the seed and rendered as a unique 3D gem.",
+    title: "Create a digital gem",
+    desc: "The fingerprint defines the gemstone's shape, facets, colors, and visual characteristics."
   },
+  {
+    n: "04",
+    title: "Use it anywhere",
+    desc: "Use your gem as an avatar, NFT, wallet identity, AI agent profile, digital signature, or collectible artwork."
+  }
 ];
 </script>
 
 <template>
   <section id="how" class="section reveal">
     <div class="section-hd">
-      <div class="section-ey">Under the hood</div>
+      <div class="section-ey">From text to digital gem</div>
       <h2 class="section-h2">How it works</h2>
     </div>
     <div class="how-grid">

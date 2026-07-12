@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
 
-  modules: ["@vercel/speed-insights/nuxt", "@vercel/analytics"],
+  modules: ["@vercel/speed-insights/nuxt", "@vercel/analytics", "@zadigetvoltaire/nuxt-gtm"],
 
   css: ["~/assets/css/main.css"],
 
@@ -14,6 +14,12 @@ export default defineNuxtConfig({
   // is nothing to render server-side. The output lands in .output/public/.
   nitro: {
     preset: "static",
+  },
+
+  gtm: {
+    id: "GTM-XXXXXXX",
+    enabled: true,
+    debug: false,
   },
 
   app: {

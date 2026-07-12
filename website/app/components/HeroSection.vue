@@ -65,17 +65,20 @@ defineExpose({
       <div class="hero-grid">
         <!-- Left: copy + forge field -->
         <div class="hero-copy">
-          <span class="eyebrow">Deterministic visual identity</span>
-
+          <span class="eyebrow">
+            Unique avatars, NFT art & digital identities
+          </span>
           <h1 class="h1">
-            Give any string<br />
-            its own <em>{{ noun }}</em
-            >.
+            Turn any string into its own
+            <em>{{ noun }}</em>.
           </h1>
 
           <p class="lede">
-            {{ lede }}
-            <strong>The same input always renders the exact same identity.</strong>
+            Transform any name, wallet address, AI agent, company, or piece of text into
+            a unique gemstone-inspired visual identity.
+            <strong>
+              The same input always creates the exact same result.
+            </strong>
           </p>
 
           <div class="forge">

@@ -1,49 +1,55 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, watch } from "vue";
-import { create, type View } from "seedstone";
+import { create } from "seedstone";
 
 const { active } = useActivePlugin();
 
 const USE_CASES = [
-  {
-    seed: "agent://atlas",
-    title: "AI Agents",
-    tag: "Per-agent identity",
-    desc: "Give every autonomous agent a face. A stone that follows it across logs, dashboards, and handoffs.",
-  },
-  {
-    seed: "0x71C7856E9D4a4C6A",
-    title: "Wallets",
-    tag: "Crypto & Web3",
-    desc: "Turn an unreadable address into a recognizable gem. Spot your wallet instantly without reading a single hex character.",
-  },
-  {
-    seed: "api_key_7731",
-    title: "Developer platforms",
-    tag: "Keys & services",
-    desc: "Deterministic avatars for keys, services, and endpoints. Generated, never stored.",
-  },
-  {
-    seed: "Helix Collective",
-    title: "Teams & communities",
-    tag: "Groups & spaces",
-    desc: "Memorable identities for squads, guilds, and spaces that feel earned and permanent.",
-  },
-  {
-    seed: "DOC-99812",
-    title: "Documents & records",
-    tag: "Files & ledgers",
-    desc: "Fingerprint files, invoices, and records so any item is identifiable at a glance.",
-  },
-  {
-    seed: "@satoshi",
-    title: "People & profiles",
-    tag: "Usernames",
-    desc: "A profile identity that is unique, consistent, and impossible to spoof by sight.",
-  },
+{
+seed: "collection://genesis",
+title: "NFT Collections",
+tag: "Generative Art",
+desc: "Create unique NFT artwork and collectible gemstone identities from deterministic seeds. Perfect for on-chain collections and digital collectibles.",
+},
+
+{
+seed: "agent://atlas",
+title: "AI Agent Avatars",
+tag: "AI Identity",
+desc: "Give every AI agent a unique visual identity that remains consistent across dashboards, chats, workflows, and autonomous systems.",
+},
+
+{
+seed: "0x71C7856E9D4a4C6A",
+title: "Wallet Avatars",
+tag: "Web3 Identity",
+desc: "Turn crypto wallet addresses into instantly recognizable visual identities for Web3 apps, explorers, and blockchain products.",
+},
+
+{
+seed: "@satoshi",
+title: "Profiles & Usernames",
+tag: "Digital Identity",
+desc: "Generate unique avatars for usernames, accounts, and online profiles without uploading photos or creating custom artwork.",
+},
+
+{
+seed: "Seedstone API",
+title: "Apps & Developer Platforms",
+tag: "API Integration",
+desc: "Generate deterministic avatars and visual fingerprints for users, API keys, services, organizations, and digital resources.",
+},
+
+{
+seed: "Argoman Studio",
+title: "Communities & Brands",
+tag: "Groups & Organizations",
+desc: "Create recognizable visual identities for communities, DAOs, teams, companies, products, and online spaces.",
+}
 ];
 
-const thumbnails: View[] = [];
+
+const thumbnails: Array<ReturnType<typeof create>> = [];
 let io: IntersectionObserver | null = null;
 
 function destroyThumbnails(): void {
@@ -100,20 +106,27 @@ onBeforeUnmount(() => {
   <section id="cases" class="section-cases reveal">
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">Where it lives</span>
-        <h2 class="sec-h2">A visual identity layer<br />for everything.</h2>
+        <span class="eyebrow">Popular use cases</span>
+
+        <h2 class="sec-h2">
+          One digital identity engine.
+          <br />
+          Endless use cases.
+        </h2>
+
         <p class="sec-lede">
-          Wherever an identifier appears, a Seedstone makes it instantly recognizable — and
-          impossible to confuse.
+          Generate unique gemstone-inspired avatars, NFT artwork, wallet identities,
+          AI agent profiles, and visual signatures from any string.
         </p>
       </div>
+
       <div class="uc-grid">
-        <div v-for="uc in USE_CASES" :key="uc.seed" class="uc">
-          <div class="ucg" :data-uc-seed="uc.seed"></div>
-          <h3>{{ uc.title }}</h3>
-          <p>{{ uc.desc }}</p>
-          <span class="uc-tag">{{ uc.tag }}</span>
-        </div>
+        <article v-for="useCase in USE_CASES" :key="useCase.seed" class="uc">
+          <div class="ucg" :data-uc-seed="useCase.seed"></div>
+          <span class="uc-tag">{{ useCase.tag }}</span>
+          <h3>{{ useCase.title }}</h3>
+          <p>{{ useCase.desc }}</p>
+        </article>
       </div>
     </div>
   </section>
