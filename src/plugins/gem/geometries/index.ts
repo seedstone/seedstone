@@ -29,7 +29,7 @@ export interface GemCutModule {
 }
 
 // ── Auto-discovery ────────────────────────────────────────────────────────────
-// Rollup (and Vite) expand import.meta.glob at build time.
+// Bundlers like Vite expand import.meta.glob at build time.
 // We use a synchronous eager glob so no async is needed at runtime.
 
 const modules = import.meta.glob<GemCutModule>("./*.ts", {

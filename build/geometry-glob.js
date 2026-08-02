@@ -9,11 +9,10 @@ export const banner = `/**
 /**
  * Expand the `import.meta.glob` call in the gem geometry registry at build time.
  *
- * `import.meta.glob` is a Vite-only feature; neither Rollup nor Rolldown
+ * `import.meta.glob` is a Vite-only feature; Rolldown does not
  * understand it natively, so we rewrite it into static imports + a plain
- * registry object. Shared by both bundler configs (rollup.config.js and
- * rolldown.config.js) — it uses the standard Rollup `transform` hook, which
- * Rolldown also implements.
+ * registry object. It uses the standard `transform` hook implemented by
+ * Rolldown.
  */
 export function geometryGlob() {
   return {
