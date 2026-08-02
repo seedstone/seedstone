@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build && mkdir -p demo/dist && cp dist/seedstone.standalone.js demo/dist/seedstone.standalone.js",
+  "outputDirectory": "demo"
+}
