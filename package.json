@@ -1,7 +1,7 @@
 {
   "name": "seedstone",
-  "version": "2.0.0",
-  "description": "Render a 3D rotating gem from any string",
+  "version": "3.0.0",
+  "description": "Create deterministic visual identities from any string",
   "keywords": [
     "3d",
     "avatar",
@@ -23,30 +23,104 @@
   "author": "titangmz",
   "repository": {
     "type": "git",
-    "url": "https://github.com/titangmz/seedstone"
+    "url": "git+https://github.com/titangmz/seedstone.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md",
+    "MIGRATION.md",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "type": "module",
   "sideEffects": false,
-  "main": "dist/seedstone.umd.js",
+  "main": "dist/seedstone.umd.cjs",
   "module": "dist/seedstone.esm.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/seedstone.esm.js",
-      "require": "./dist/seedstone.umd.js"
+  "typesVersions": {
+    "*": {
+      "core": [
+        "dist/core/index.d.ts"
+      ],
+      "gem": [
+        "dist/plugins/gem/index.d.ts"
+      ],
+      "cat": [
+        "dist/plugins/cat/index.d.ts"
+      ],
+      "fox": [
+        "dist/plugins/fox/index.d.ts"
+      ]
     }
   },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/seedstone.esm.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/seedstone.umd.cjs"
+      }
+    },
+    "./core": {
+      "import": {
+        "types": "./dist/core/index.d.ts",
+        "default": "./dist/core.js"
+      },
+      "require": {
+        "types": "./dist/core/index.d.cts",
+        "default": "./dist/core.cjs"
+      }
+    },
+    "./gem": {
+      "import": {
+        "types": "./dist/plugins/gem/index.d.ts",
+        "default": "./dist/gem.js"
+      },
+      "require": {
+        "types": "./dist/plugins/gem/index.d.cts",
+        "default": "./dist/gem.cjs"
+      }
+    },
+    "./cat": {
+      "import": {
+        "types": "./dist/plugins/cat/index.d.ts",
+        "default": "./dist/cat.js"
+      },
+      "require": {
+        "types": "./dist/plugins/cat/index.d.cts",
+        "default": "./dist/cat.cjs"
+      }
+    },
+    "./fox": {
+      "import": {
+        "types": "./dist/plugins/fox/index.d.ts",
+        "default": "./dist/fox.js"
+      },
+      "require": {
+        "types": "./dist/plugins/fox/index.d.cts",
+        "default": "./dist/fox.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "rollup -c",
+    "build": "pnpm clean && pnpm build:types && rolldown -c",
+    "clean": "node build/clean.js",
+    "build:types": "tsc -p tsconfig.json --declaration --emitDeclarationOnly --declarationDir dist && node build/cjs-types.js",
+    "build:js": "rolldown -c",
     "pretest": "pnpm build",
-    "test": "vitest run",
-    "prepublishOnly": "pnpm test",
-    "dev": "concurrently -n lib,web -c magenta,cyan \"rollup -c -w\" \"pnpm --filter seedstone-website dev\"",
-    "dev:lib": "rollup -c -w",
+    "test": "pnpm test:types && vitest run",
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
+    "check:package": "publint && attw --pack . && node build/check-package.js",
+    "release:check": "pnpm test && pnpm lint && pnpm fmt:check && pnpm check:package && pnpm website:build",
+    "prepublishOnly": "pnpm release:check",
+    "dev": "pnpm build && concurrently -n lib,web -c magenta,cyan \"rolldown -c -w\" \"pnpm --filter seedstone-website dev\"",
+    "dev:lib": "rolldown -c -w",
     "website:dev": "pnpm --filter seedstone-website dev",
     "website:build": "pnpm --filter seedstone-website build",
     "website:preview": "pnpm --filter seedstone-website preview",
@@ -55,15 +129,18 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix"
   },
+  "dependencies": {
+    "@types/three": "^0.184.1"
+  },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
-    "@types/three": "^0.184.1",
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@svgdotjs/svg.js": "^3.2.5",
     "concurrently": "^10.0.3",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
-    "rollup": "^4.0.0",
+    "publint": "^0.3.22",
+    "rolldown": "^1.1.2",
+    "svgdom": "^0.1.23",
     "three": "^0.184.0",
     "tslib": "^2.8.1",
     "typescript": "^5.0.0",

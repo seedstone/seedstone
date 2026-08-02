@@ -1,88 +1,155 @@
 # seedstone
 
-Render a 3D rotating gemstone from any string. The same string always produces the exact same gem.
-
-Every trait — colour, cut, refraction, iridescence, imperfections — is derived deterministically from the seed, making seedstone a drop-in visual identity for usernames, hashes, or UUIDs.
+Create deterministic visual identities from any string. The same seed always
+produces the same output, whether the implementation renders a WebGL gemstone,
+an SVG avatar, or a third-party visual.
 
 ## Quick start
 
-```ts
-import { SeedstoneRenderer } from "seedstone";
-
-new SeedstoneRenderer("alice", {
-  container: document.getElementById("gem")!,
-});
+```sh
+npm install seedstone
 ```
 
-**Script tag** — include `dist/seedstone.standalone.js`, then use `window.Seedstone.SeedstoneRenderer`.
+```ts
+import { create, gem } from "seedstone";
 
-## Overrides
+const view = create(gem, "#avatar", "alice");
+```
 
-Pass a `config` tree to pin or re-randomise any trait. `SeedstoneConfigOverrides` is a
-deep-partial of the trait tree: a plain number/string pins a value for every seed, while
-`seeded()` flips a value to seed-generated instead.
+Seedstone bundles three plugins:
 
 ```ts
-import { SeedstoneRenderer, seeded, type SeedstoneConfigOverrides } from "seedstone";
+import { create, gem, cat, fox } from "seedstone";
 
-const config: SeedstoneConfigOverrides = {
-  gem: {
-    cut: "spinel", // pin every gem to the spinel cut
-    bodyLightness: seeded(), // make the body lightness vary by seed
-    distortion: { perfection: 1 }, // pin to fully flawless
+create(gem, "#gem", "alice");
+create(cat, "#cat", "alice");
+create(fox, "#fox", "alice");
+```
+
+Direct entry points are also available as `seedstone/gem`, `seedstone/cat`, and
+`seedstone/fox`. For a script tag, load `dist/seedstone.standalone.js` and use
+`window.Seedstone.create(window.Seedstone.gem, target, seed)`.
+
+## Overrides and live updates
+
+Every plugin declares a typed tree of traits. Pass `overrides` to pin a value or
+replace a trait with a new seed-driven range:
+
+```ts
+import { create, gem, seeded, type GemConfig } from "seedstone";
+
+const view = create(gem, "#avatar", "alice", {
+  overrides: {
+    gem: {
+      cut: "spinel",
+      hue: seeded(140, 240),
+    },
   },
-};
-
-new SeedstoneRenderer("alice", {
-  container: document.getElementById("gem")!,
-  config,
 });
+
+view.update("bob");
+view.setOverrides({ gem: { hue: 200 } });
+view.setOverrides(); // reset all overrides
+
+const resolved: GemConfig = view.config;
+view.destroy();
 ```
 
-All tunable traits live in [`src/config.ts`](src/config.ts).
+`view.config` is always the resolved, plain-value configuration. Override inputs
+are typed from the selected plugin, so unrelated trait paths are rejected by
+TypeScript.
 
-## Live updates
-
-`update(seed)` swaps to a new seed and `setConfig(overrides)` re-applies overrides — both
-reconcile the existing instance in place, so they're cheap enough to call on every keystroke.
-Read back the fully-resolved values for the current seed from `gem.config` (a `SeedstoneConfig`).
+The cat also has a headless renderer for SSR, static files, and tests:
 
 ```ts
-import { SeedstoneRenderer, type SeedstoneConfig } from "seedstone";
+import { renderCat } from "seedstone/cat";
 
-const gem = new SeedstoneRenderer("alice", {
-  container: document.getElementById("gem")!,
+const svg = renderCat("alice");
+```
+
+Gem-specific controls remain typed when using the common runtime:
+
+```ts
+const view = create(gem, "#avatar", "alice", {
+  autoRotate: false,
+  pixelRatio: 1,
+  preserveDrawingBuffer: true,
 });
 
-input.addEventListener("input", () => gem.update(input.value)); // new seed, same instance
-
-gem.setConfig({ gem: { cut: "garnet", hue: 200 } }); // pin traits live
-gem.setConfig({}); // clear overrides
-
-const resolved: SeedstoneConfig = gem.config; // every trait, resolved for this seed
-console.log(resolved.gem.hue, resolved.gem.speed);
+view.play();
+view.pause();
 ```
+
+## Writing a plugin
+
+“Plugin” is the extension-system term; consumers normally work with short
+implementation names such as `gem` or `cat`. Plugin authors use the lightweight
+`seedstone/core` entry point:
+
+```ts
+import {
+  definePlugin,
+  derive,
+  merge,
+  mountString,
+  seeded,
+  type Config,
+  type Override,
+} from "seedstone/core";
+
+const traits = { body: { hue: seeded(0, 360) } };
+type BadgeConfig = Config<typeof traits>;
+type BadgeOverrides = Override<typeof traits>;
+
+export const badge = definePlugin<typeof traits, BadgeConfig>({
+  id: "badge",
+  name: "Badge",
+  traits,
+  mount: (container, seed, options = {}) =>
+    mountString<BadgeConfig, BadgeOverrides>(
+      container,
+      seed,
+      (nextSeed, overrides) => derive(merge(traits, overrides), nextSeed),
+      ({ body }) => `<span style="color:hsl(${body.hue} 70% 50%)">◆</span>`,
+      options,
+    ),
+});
+```
+
+Published plugins should declare `seedstone` as a peer dependency and import
+their authoring API from `seedstone/core`:
+
+```json
+{
+  "peerDependencies": {
+    "seedstone": "^3.0.0"
+  }
+}
+```
+
+See [`src/README.md`](src/README.md) for the engine and plugin architecture.
 
 ## API stability
 
-The **core API** — `SeedstoneRenderer`, `seeded()`, and the `SeedstoneConfig` /
-`SeedstoneConfigOverrides` types — follows semver and stays stable across a major version.
+The consumer runtime, trait engine, plugin contract, and documented entry
+points follow semver. Plugin-specific rendering internals are not public unless
+their entry point exports them.
 
-The **advanced exports** for schema introspection (`configSchema`, `mergeSchema`,
-`resolveConfig`, `isScalarParam`, `isChoiceParam`, and the `ScalarParam` / `ChoiceParam` /
-`SeedstoneSchema` types) exist for building a UI against the raw schema. They may change in any
-minor release — only depend on them if you pin the version.
+Seed-derived configurations and bundled visual output remain stable across v3
+minor and patch releases. An intentional identity change requires a new major
+version. See [MIGRATION.md](MIGRATION.md) when upgrading from v2.
 
 ## Development
 
 ```sh
-# one-time setup (installs the library and website workspaces)
 pnpm install
-
-pnpm dev    # watches the library and serves the website simultaneously
-pnpm build  # production bundle into dist/
-pnpm test   # build + run test suite
+pnpm dev
+pnpm build
+pnpm test
 ```
+
+The procedural cat was inspired by [@jaameypr](https://github.com/jaameypr)'s
+[catsum](https://github.com/jaameypr/catsum) fork.
 
 ## License
 

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from "vue";
+import { computed, onMounted, onBeforeUnmount } from "vue";
+
+const { active } = useActivePlugin();
+const activeNoun = computed(() => active.value.noun ?? active.value.plugin.name.toLowerCase());
 
 useHead({
   link: [
@@ -13,11 +16,22 @@ useHead({
 });
 
 useSeoMeta({
-  title: "Seedstone — Every string is a unique gemstone",
+  title: "Seedstone | Generate Unique Digital Identities, Avatars & NFT Art from Any String",
+
   description:
-    "Render a 3D rotating gemstone from any string. Deterministic, WebGL-powered, Three.js.",
-  ogTitle: "Seedstone",
-  ogDescription: "Every string is a unique gemstone",
+    "Turn any text, wallet address, username, or AI agent into a unique visual identity. Create avatars, NFT collections, digital signatures, and generative art.",
+
+  ogTitle: "Seedstone | Unique Digital Identities from Any String",
+
+  ogDescription:
+    "Generate avatars, NFT art, wallet identities, and AI agent visuals from any string.",
+
+  twitterCard: "summary_large_image",
+
+  twitterTitle: "Generate Unique Digital Identities from Any String",
+
+  twitterDescription:
+    "Create avatars, NFT art, digital signatures, and AI agent identities from any text.",
 });
 
 let revealObs: IntersectionObserver | null = null;
@@ -48,7 +62,7 @@ onBeforeUnmount(() => revealObs?.disconnect());
     <section id="usage" class="section reveal">
       <div class="section-hd">
         <div class="section-ey">Get started</div>
-        <h2 class="section-h2">Two lines to a gem</h2>
+        <h2 class="section-h2">Two lines to a {{ activeNoun }}</h2>
       </div>
       <CodeSection />
     </section>

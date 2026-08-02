@@ -8,3 +8,5 @@ website/.nuxt
 website/.output
 website/node_modules
 website/.DS_Store
+
+.pnpm-store

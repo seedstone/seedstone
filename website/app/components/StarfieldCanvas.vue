@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, useTemplateRef } from "vue";
 
-// ── Constants ────────────────────────────────────────────────────────────────
 const STAR_COUNT = 220;
 const STAR_RADIUS_MIN = 0.4;
 const STAR_RADIUS_RANGE = 1.3;

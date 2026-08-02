@@ -17,11 +17,12 @@
         color: #e8e8f0;
         font-family: system-ui, sans-serif;
       }
-      #gem {
+      #art {
         width: 360px;
         height: 360px;
       }
-      input {
+      input,
+      select {
         width: 280px;
         padding: 10px 14px;
         border-radius: 8px;
@@ -39,28 +40,33 @@
     </style>
   </head>
   <body>
-    <div id="gem"></div>
+    <div id="art"></div>
+    <select id="plugin">
+      <option value="gem">gem</option>
+      <option value="cat">cat</option>
+      <option value="fox">fox</option>
+    </select>
     <input id="seed" value="alice" autocomplete="off" spellcheck="false" />
-    <p>Type any string — the same string always produces the same gem.</p>
+    <p>Pick a plugin, then type any string — the same string always produces the same art.</p>
 
-    <!-- Build the library first: npm install && npm run build -->
     <script src="../dist/seedstone.standalone.js"></script>
     <script>
-      const { SeedstoneRenderer, seeded } = window.Seedstone;
-      const input = document.getElementById("seed");
+      const { create, gem, cat, fox } = window.Seedstone;
+      const plugins = { gem, cat, fox };
 
-      const gem = new SeedstoneRenderer(input.value, {
-        container: document.getElementById("gem"),
-        config: {
-          gem: {
-            cut: "spinel", // pin the cut
-            bodyLightness: seeded(), // make it seed-generated
-            distortion: { perfection: 1 }, // pin to fully flawless
-          },
-        },
-      });
+      const art = document.getElementById("art");
+      const seed = document.getElementById("seed");
+      const picker = document.getElementById("plugin");
 
-      input.addEventListener("input", () => gem.update(input.value));
+      let view;
+      function render() {
+        view?.destroy(); // tear down the old plugin
+        view = create(plugins[picker.value], art, seed.value);
+      }
+      render();
+
+      seed.addEventListener("input", () => view.update(seed.value));
+      picker.addEventListener("change", render); // swap plugin in place
     </script>
   </body>
 </html>

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import type { SeedstoneConfig } from "seedstone";
+import { DEFAULT_SAMPLE_SEEDS } from "~/plugins";
 
 const route = useRoute();
 const router = useRouter();
+const { active } = useActivePlugin();
 
 const inputValue = ref(typeof route.query.seed === "string" ? route.query.seed : "");
-const gemConfig = ref<SeedstoneConfig | null>(null);
+const config = ref<unknown>(null);
 const inputFocused = ref(false);
 const caseInsensitive = ref(true);
 const copied = ref(false);
@@ -19,16 +20,35 @@ function share() {
   }, 2000);
 }
 
-const QUICK_PICKS = ["@satoshi", "0x71C7…976F", "Orion-7", "Stripe Inc", "DOC-99812"];
+const noun = computed(
+  () => active.value?.noun ?? active.value?.plugin.name.toLowerCase() ?? "identity",
+);
+const lede = computed(
+  () =>
+    active.value?.lede ??
+    `Type a username, wallet, company, or AI agent — Seedstone renders a unique ${noun.value} as its permanent visual identity.`,
+);
+const quickPicks = computed(() => active.value?.sampleSeeds ?? DEFAULT_SAMPLE_SEEDS);
 
 const activeSeed = computed(() => {
   const raw = inputValue.value.trim() || "doadkjwfo";
   return caseInsensitive.value ? raw.toLowerCase() : raw;
 });
 
-watch(inputValue, (val) => {
-  router.replace({ query: val.trim() ? { seed: val.trim() } : {} });
+watch([inputValue, () => active.value.plugin.id], ([value, plugin]) => {
+  const query = { ...route.query, plugin };
+  const seed = value.trim();
+  if (seed) query.seed = seed;
+  else delete query.seed;
+  router.replace({ query });
 });
+
+watch(
+  () => active.value?.plugin.id,
+  () => {
+    config.value = null;
+  },
+);
 
 function onInput() {}
 function onQuickPick(val: string) {
@@ -47,19 +67,18 @@ defineExpose({
   <header id="hero" class="hero">
     <div class="wrap">
       <div class="hero-grid">
-        <!-- Left: copy + forge field -->
         <div class="hero-copy">
-          <span class="eyebrow">Deterministic visual identity</span>
-
+          <span class="eyebrow"> Unique avatars, NFT art & digital identities </span>
           <h1 class="h1">
-            Give any string<br />
-            its own <em>gemstone</em>.
+            Turn any string into its own
+            <em>{{ noun }}</em
+            >.
           </h1>
 
           <p class="lede">
-            Type a username, wallet, company, or AI agent — Seedstone forges a unique 3D gem as its
-            <strong>permanent visual identity</strong>. The same input always crystallizes the exact
-            same stone.
+            Transform any name, wallet address, AI agent, company, or piece of text into a unique
+            visual identity.
+            <strong> The same input always creates the exact same result. </strong>
           </p>
 
           <div class="forge">
@@ -149,21 +168,26 @@ defineExpose({
 
             <div class="examples">
               <span class="ex-lbl">Try</span>
-              <button v-for="val in QUICK_PICKS" :key="val" class="chip" @click="onQuickPick(val)">
+              <button v-for="val in quickPicks" :key="val" class="chip" @click="onQuickPick(val)">
                 {{ val }}
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Right: gem stage + genome panel -->
         <div class="hero-right">
           <div class="stage">
             <ClientOnly>
-              <GemViewer :seed="activeSeed" @config="(c) => (gemConfig = c)" />
+              <PluginStage
+                v-if="active"
+                :key="active.plugin.id"
+                :seed="activeSeed"
+                :plugin="active.plugin"
+                @config="(c) => (config = c)"
+              />
             </ClientOnly>
           </div>
-          <GemGenome :config="gemConfig" :seed="activeSeed" />
+          <Readout v-if="active" :entry="active" :config="config" :seed="activeSeed" />
         </div>
       </div>
     </div>
@@ -395,16 +419,16 @@ defineExpose({
   z-index: 0;
   pointer-events: none;
 }
-.stage :deep(.gem-wrap) {
+.stage :deep(.stage-wrap) {
   width: 100%;
   height: 100%;
   position: relative;
   z-index: 1;
 }
-.stage :deep(.gem-wrap::before) {
+.stage :deep(.stage-wrap::before) {
   display: none;
 }
-.stage :deep(.gem-container) {
+.stage :deep(.stage-container) {
   border-radius: 0;
   overflow: visible;
 }

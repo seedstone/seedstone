@@ -1,22 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
 
 const copiedInstall = ref(false);
 const copiedUsage = ref(false);
 const usageHtml = ref<string | null>(null);
+const { active } = useActivePlugin();
 
 const installCmd = "npm install seedstone";
 
-const usageCode = `import { SeedstoneRenderer } from 'seedstone';
+const usageCode = computed(() => {
+  const name = active.value.importName ?? "plugin";
+  return `import { create, ${name} } from 'seedstone';
 
-new SeedstoneRenderer('alice', {
-  container: document.getElementById('gem'),
-});`;
-
-onMounted(async () => {
-  const { codeToHtml } = await import("shiki");
-  usageHtml.value = await codeToHtml(usageCode, { lang: "javascript", theme: "one-dark-pro" });
+const view = create(${name}, '#avatar', 'alice');`;
 });
+
+async function highlightUsage(): Promise<void> {
+  const { codeToHtml } = await import("shiki");
+  usageHtml.value = await codeToHtml(usageCode.value, {
+    lang: "javascript",
+    theme: "one-dark-pro",
+  });
+}
+
+watch(usageCode, () => highlightUsage(), { immediate: true });
 
 async function copyInstall() {
   await navigator.clipboard.writeText(installCmd);
@@ -27,7 +34,7 @@ async function copyInstall() {
 }
 
 async function copyUsage() {
-  await navigator.clipboard.writeText(usageCode);
+  await navigator.clipboard.writeText(usageCode.value);
   copiedUsage.value = true;
   setTimeout(() => {
     copiedUsage.value = false;
@@ -37,7 +44,6 @@ async function copyUsage() {
 
 <template>
   <div class="code-section">
-    <!-- ── Install card ─────────────────────────────────── -->
     <div class="card">
       <span class="card-label">install</span>
       <div class="code-wrap">
@@ -79,11 +85,9 @@ async function copyUsage() {
       </div>
     </div>
 
-    <!-- ── Usage card ───────────────────────────────────── -->
     <div class="card">
       <span class="card-label">usage</span>
       <div class="code-wrap">
-        <!-- Shiki-highlighted once mounted; plain fallback while loading -->
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-if="usageHtml" class="shiki-wrap" v-html="usageHtml" />
         <pre v-else class="install-block plain">{{ usageCode }}</pre>
@@ -140,7 +144,6 @@ async function copyUsage() {
   }
 }
 
-/* ── Card ──────────────────────────────────────────────── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -160,7 +163,6 @@ async function copyUsage() {
   color: var(--muted);
 }
 
-/* ── Code blocks ───────────────────────────────────────── */
 .code-wrap {
   position: relative;
 }
@@ -201,7 +203,6 @@ async function copyUsage() {
   margin: 0;
 }
 
-/* ── Copy button ───────────────────────────────────────── */
 .copy-btn {
   position: absolute;
   top: 8px;

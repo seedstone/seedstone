@@ -1,34 +1,56 @@
-/**
- * seedstone — public entry point
- */
-
-// ── Core API ──────────────────────────────────────────────────────────────────
-// Everything you need to render a gem from a string.
-
-export { SeedstoneRenderer } from "./renderer";
-export { seeded } from "./config";
-
-export type {
-  SeedstoneConfig, // a gem's fully-resolved values (hue, speed, …)
-  SeedstoneConfigOverrides, // the deep-partial tree you pass to pin/seed values
-} from "./config";
-
-// ── Advanced: schema introspection ────────────────────────────────────────────
-// Only needed to *inspect* the tuning schema — e.g. to build a config UI that
-// walks every parameter and reads its range. Normal usage never touches these.
-
 export {
-  config as configSchema,
-  mergeSchema,
-  resolveConfig,
-  isScalarParam,
-  isChoiceParam,
-} from "./config";
-export { listCuts, buildGeometry } from "./geometries/index";
+  constant,
+  seeded,
+  pick,
+  derive,
+  merge,
+  isConstant,
+  isSeeded,
+  isPick,
+  sampleUnit,
+  mulberry32,
+  hash2D,
+  hslToHex,
+} from "./core/index.js";
 
 export type {
-  ScalarParam, // a numeric parameter: { mode, value, min, max, step }
-  ChoiceParam, // a categorical parameter: { mode, value, options }
-  SeedstoneSchema, // the raw schema tree (params still wrapped)
-  Seeded, // marker returned by seeded()
-} from "./config";
+  Trait,
+  ConstantTrait,
+  SeededTrait,
+  PickTrait,
+  Traits,
+  Config,
+  Override,
+} from "./core/index.js";
+
+export { definePlugin, create } from "./core/index.js";
+export type { Plugin, PluginOptions, PluginView, View, CreateOptions } from "./core/index.js";
+
+export { gem, gemTraits, buildGeometry, listCuts } from "./plugins/gem/index.js";
+export type {
+  GemConfig,
+  GemTraits,
+  GemOverrides,
+  GemOptions,
+  GemView,
+  GemCut,
+  GemCutModule,
+} from "./plugins/gem/index.js";
+
+export { cat, catTraits, renderCat } from "./plugins/cat/index.js";
+export type {
+  CatConfig,
+  CatTraits,
+  CatOverrides,
+  CatValues,
+  Palette,
+} from "./plugins/cat/index.js";
+
+export { fox, foxTraits } from "./plugins/fox/index.js";
+export type {
+  FoxConfig,
+  FoxTraits,
+  FoxOverrides,
+  FoxValues,
+  FoxPalette,
+} from "./plugins/fox/index.js";
