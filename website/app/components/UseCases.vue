@@ -5,49 +5,48 @@ import { create } from "seedstone";
 const { active } = useActivePlugin();
 
 const USE_CASES = [
-{
-seed: "collection://genesis",
-title: "NFT Collections",
-tag: "Generative Art",
-desc: "Create unique NFT artwork and collectible gemstone identities from deterministic seeds. Perfect for on-chain collections and digital collectibles.",
-},
+  {
+    seed: "collection://genesis",
+    title: "NFT Collections",
+    tag: "Generative Art",
+    desc: "Create unique NFT artwork and collectible gemstone identities from deterministic seeds. Perfect for on-chain collections and digital collectibles.",
+  },
 
-{
-seed: "agent://atlas",
-title: "AI Agent Avatars",
-tag: "AI Identity",
-desc: "Give every AI agent a unique visual identity that remains consistent across dashboards, chats, workflows, and autonomous systems.",
-},
+  {
+    seed: "agent://atlas",
+    title: "AI Agent Avatars",
+    tag: "AI Identity",
+    desc: "Give every AI agent a unique visual identity that remains consistent across dashboards, chats, workflows, and autonomous systems.",
+  },
 
-{
-seed: "0x71C7856E9D4a4C6A",
-title: "Wallet Avatars",
-tag: "Web3 Identity",
-desc: "Turn crypto wallet addresses into instantly recognizable visual identities for Web3 apps, explorers, and blockchain products.",
-},
+  {
+    seed: "0x71C7856E9D4a4C6A",
+    title: "Wallet Avatars",
+    tag: "Web3 Identity",
+    desc: "Turn crypto wallet addresses into instantly recognizable visual identities for Web3 apps, explorers, and blockchain products.",
+  },
 
-{
-seed: "@satoshi",
-title: "Profiles & Usernames",
-tag: "Digital Identity",
-desc: "Generate unique avatars for usernames, accounts, and online profiles without uploading photos or creating custom artwork.",
-},
+  {
+    seed: "@satoshi",
+    title: "Profiles & Usernames",
+    tag: "Digital Identity",
+    desc: "Generate unique avatars for usernames, accounts, and online profiles without uploading photos or creating custom artwork.",
+  },
 
-{
-seed: "Seedstone API",
-title: "Apps & Developer Platforms",
-tag: "API Integration",
-desc: "Generate deterministic avatars and visual fingerprints for users, API keys, services, organizations, and digital resources.",
-},
+  {
+    seed: "Seedstone API",
+    title: "Apps & Developer Platforms",
+    tag: "API Integration",
+    desc: "Generate deterministic avatars and visual fingerprints for users, API keys, services, organizations, and digital resources.",
+  },
 
-{
-seed: "Argoman Studio",
-title: "Communities & Brands",
-tag: "Groups & Organizations",
-desc: "Create recognizable visual identities for communities, DAOs, teams, companies, products, and online spaces.",
-}
+  {
+    seed: "Argoman Studio",
+    title: "Communities & Brands",
+    tag: "Groups & Organizations",
+    desc: "Create recognizable visual identities for communities, DAOs, teams, companies, products, and online spaces.",
+  },
 ];
-
 
 const thumbnails: Array<ReturnType<typeof create>> = [];
 let io: IntersectionObserver | null = null;
@@ -115,8 +114,8 @@ onBeforeUnmount(() => {
         </h2>
 
         <p class="sec-lede">
-          Generate unique avatars, NFT artwork, wallet identities,
-          AI agent profiles, and visual signatures from any string.
+          Generate unique avatars, NFT artwork, wallet identities, AI agent profiles, and visual
+          signatures from any string.
         </p>
       </div>
 

@@ -1,17 +1,15 @@
 import { definePlugin } from "../../core/index";
-import { SeedstoneRenderer } from "./renderer";
-import { gemTraits, type GemTraits, type GemConfig, type GemOverrides } from "./config";
-import { gemLab } from "./lab";
+import { GemRenderer } from "./renderer";
+import { gemTraits, type GemTraits, type GemConfig } from "./config";
 
-export const gemPlugin = definePlugin<GemTraits, GemConfig>({
+export const gem = definePlugin<GemTraits, GemConfig>({
   id: "gem",
-  name: "Gems",
+  name: "Gemstone",
   traits: gemTraits,
-  lab: gemLab,
   mount: (container, seed, options = {}) =>
-    new SeedstoneRenderer(seed, {
+    new GemRenderer(seed, {
       container,
-      config: options.config as GemOverrides | undefined,
+      overrides: options.overrides,
       width: options.width,
       height: options.height,
       background: options.background,

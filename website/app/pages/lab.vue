@@ -31,7 +31,7 @@ let applyTimer: ReturnType<typeof setTimeout> | undefined;
 
 watch(overrides, (val) => {
   clearTimeout(applyTimer);
-  applyTimer = setTimeout(() => mounted?.setConfig(val), 120);
+  applyTimer = setTimeout(() => mounted?.setOverrides(val), 120);
 });
 
 function init(): void {

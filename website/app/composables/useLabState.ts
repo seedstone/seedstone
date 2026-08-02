@@ -1,12 +1,6 @@
 import { ref, reactive, computed } from "vue";
-import {
-  isSeeded,
-  isConstant,
-  isPick,
-  type LabSlider,
-  type LabOptions,
-  type LabControls,
-} from "seedstone";
+import { isSeeded, isConstant, isPick } from "seedstone";
+import type { LabSlider, LabOptions, LabControls } from "~/lab-controls";
 import type { SitePlugin } from "~/plugins";
 
 export interface NumberParam extends LabSlider {
@@ -127,7 +121,7 @@ export function useLabState() {
 
   function build(entry: SitePlugin): void {
     clear();
-    const lab: LabControls = entry.plugin.lab ?? {};
+    const lab = entry.controls;
     const groups = new Map<string, Param[]>();
     for (const param of collectParams(entry.plugin.traits, lab)) {
       const sec = sectionFor(param.path);
@@ -202,7 +196,7 @@ export function useLabState() {
       ([, v]) => typeof v === "number" || typeof v === "string",
     );
     const fns = [usesSeeded && "seeded", usesPinned && "constant"].filter(Boolean).join(", ");
-    const literal = `config: ${body}`;
+    const literal = `overrides: ${body}`;
     return fns ? `import { ${fns} } from 'seedstone'\n\n${literal}` : literal;
   });
 

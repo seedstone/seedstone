@@ -6,7 +6,7 @@
  */
 
 import { hslToHex } from "../../core/index";
-import type { MeowtarValues } from "./config";
+import type { CatValues } from "./config";
 
 /** Every fill the drawing needs, as `#rrggbb` strings. */
 export interface Palette {
@@ -40,7 +40,7 @@ const hex = (h: number, s: number, l: number): string =>
     .padStart(6, "0");
 
 /** Build the full palette from resolved coat + eye traits. */
-export function buildPalette(v: MeowtarValues): Palette {
+export function buildPalette(v: CatValues): Palette {
   const h = v.coat.hue;
   let s = v.coat.saturation;
   let l = v.coat.lightness;

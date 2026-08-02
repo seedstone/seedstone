@@ -1,7 +1,7 @@
 {
   "name": "seedstone",
   "version": "2.0.0",
-  "description": "Render a 3D rotating gem from any string",
+  "description": "Create deterministic visual identities from any string",
   "keywords": [
     "3d",
     "avatar",
@@ -30,23 +30,45 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "main": "dist/seedstone.umd.js",
+  "main": "dist/seedstone.umd.cjs",
   "module": "dist/seedstone.esm.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/seedstone.esm.js",
-      "require": "./dist/seedstone.umd.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/seedstone.umd.cjs"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core.js",
+      "require": "./dist/core.cjs"
+    },
+    "./gem": {
+      "types": "./dist/plugins/gem/index.d.ts",
+      "import": "./dist/gem.js",
+      "require": "./dist/gem.cjs"
+    },
+    "./cat": {
+      "types": "./dist/plugins/cat/index.d.ts",
+      "import": "./dist/cat.js",
+      "require": "./dist/cat.cjs"
+    },
+    "./fox": {
+      "types": "./dist/plugins/fox/index.d.ts",
+      "import": "./dist/fox.js",
+      "require": "./dist/fox.cjs"
     }
   },
   "scripts": {
-    "build": "pnpm build:types && rolldown -c",
+    "build": "pnpm clean && pnpm build:types && rolldown -c",
+    "clean": "node build/clean.js",
     "build:types": "tsc -p tsconfig.json --declaration --emitDeclarationOnly --declarationDir dist",
     "build:js": "rolldown -c",
     "build:compare": "node build/compare.js",
     "pretest": "pnpm build",
-    "test": "vitest run",
+    "test": "pnpm test:types && vitest run",
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
     "prepublishOnly": "pnpm test",
     "dev": "pnpm build && concurrently -n lib,web -c magenta,cyan \"rolldown -c -w\" \"pnpm --filter seedstone-website dev\"",
     "dev:lib": "rolldown -c -w",

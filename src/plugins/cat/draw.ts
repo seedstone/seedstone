@@ -13,11 +13,11 @@
  */
 
 import { mulberry32 } from "../../core/index";
-import type { MeowtarValues } from "./config";
+import type { CatValues } from "./config";
 import type { Palette } from "./palette";
 
 /** A cat ready to draw: resolved traits, palette, name, and a placement seed. */
-export interface MeowtarConfig extends MeowtarValues {
+export interface CatConfig extends CatValues {
   palette: Palette;
   name: string;
   /** Integer seed for marking placement (speckles, patch side). */
@@ -35,7 +35,7 @@ const clamp = (n: number, lo: number, hi: number) => (n < lo ? lo : n > hi ? hi 
 const CX = 128;
 
 /** Build the complete `<svg>…</svg>` for a resolved cat config. */
-export function drawCat(config: MeowtarConfig): string {
+export function drawCat(config: CatConfig): string {
   const { coat, face, ears, eyes, whiskers, mood, palette: p } = config;
   const rng = mulberry32(config.rngSeed);
   const uid = (config.rngSeed >>> 0).toString(36);

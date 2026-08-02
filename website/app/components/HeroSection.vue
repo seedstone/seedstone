@@ -65,20 +65,17 @@ defineExpose({
       <div class="hero-grid">
         <!-- Left: copy + forge field -->
         <div class="hero-copy">
-          <span class="eyebrow">
-            Unique avatars, NFT art & digital identities
-          </span>
+          <span class="eyebrow"> Unique avatars, NFT art & digital identities </span>
           <h1 class="h1">
             Turn any string into its own
-            <em>{{ noun }}</em>.
+            <em>{{ noun }}</em
+            >.
           </h1>
 
           <p class="lede">
-            Transform any name, wallet address, AI agent, company, or piece of text into
-            a unique visual identity.
-            <strong>
-              The same input always creates the exact same result.
-            </strong>
+            Transform any name, wallet address, AI agent, company, or piece of text into a unique
+            visual identity.
+            <strong> The same input always creates the exact same result. </strong>
           </p>
 
           <div class="forge">

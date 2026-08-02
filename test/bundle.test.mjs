@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  gemPlugin,
+  gem,
   constant,
   seeded,
   derive,
@@ -14,7 +14,7 @@ import {
 // exports, the renamed engine API, and the geometry-glob transform all
 // survive the build. Engine internals are unit-tested from source in core.test.ts.
 
-const configSchema = gemPlugin.traits;
+const configSchema = gem.traits;
 
 const seededLeaves = (node, path = []) => {
   if (isSeeded(node)) return [{ path: path.join("."), min: node.min, max: node.max }];

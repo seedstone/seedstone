@@ -1,5 +1,5 @@
-import { isSeeded, isPick, isConstant, type Traits } from "./traits";
-import type { Plugin, View, CreateOptions, LabControls, LabSlider } from "./contract";
+import type { Override, Traits } from "./traits";
+import type { Plugin, View, CreateOptions } from "./contract";
 
 /** Identity helper — declare a plugin with full type inference. */
 export function definePlugin<T extends Traits, C>(plugin: Plugin<T, C>): Plugin<T, C> {
@@ -12,15 +12,15 @@ export function definePlugin<T extends Traits, C>(plugin: Plugin<T, C>): Plugin<
  * validates the inputs, then invokes the plugin's `mount` hook. End users call
  * `create`; they never call `plugin.mount` directly.
  *
- *   const view = create(gemPlugin, "#avatar", "alice");
- *   const view = create(catPlugin, el, "alice", { config: { coat: { hue: constant(120) } } });
+ *   const view = create(gem, "#avatar", "alice");
+ *   const view = create(cat, el, "alice", { overrides: { coat: { hue: 120 } } });
  */
 export function create<T extends Traits, C>(
   plugin: Plugin<T, C>,
   target: string | HTMLElement,
   seed: string,
-  options?: CreateOptions,
-): View<C> {
+  options?: CreateOptions<Override<T>>,
+): View<C, Override<T>> {
   const container = typeof target === "string" ? document.querySelector(target) : target;
   if (!(container instanceof HTMLElement)) {
     const where = typeof target === "string" ? ` for selector "${target}"` : "";
@@ -32,58 +32,18 @@ export function create<T extends Traits, C>(
   return plugin.mount(container, seed, options);
 }
 
-/**
- * Build the `LabControls` map for a plugin's lab UI:
- *   - `seeded(min, max)` traits → `{ min, max }` slider (auto-filled; entry in
- *     `ranges` overrides if present)
- *   - `constant(number)` traits → `{ min, max }` slider only if `ranges` has an
- *     entry for the dot-path (constants have no inherent range)
- *   - `pick(options)` traits → `string[]` dropdown (auto-filled)
- *   - `constant(string)` traits → skipped
- */
-export function buildLabControls(
-  traits: Traits,
-  ranges: Record<string, LabSlider> = {},
-): LabControls {
-  const out: LabControls = {};
-
-  const walk = (node: unknown, path: string[]): void => {
-    const dotted = path.join(".");
-    if (isSeeded(node)) {
-      out[dotted] = ranges[dotted] ?? { min: node.min, max: node.max };
-      return;
-    }
-    if (isConstant(node)) {
-      if (typeof node.value !== "number") return;
-      if (dotted in ranges) out[dotted] = ranges[dotted];
-      return;
-    }
-    if (isPick(node)) {
-      out[dotted] = node.options();
-      return;
-    }
-    if (node && typeof node === "object" && !Array.isArray(node)) {
-      for (const [key, child] of Object.entries(node)) walk(child, [...path, key]);
-    }
-  };
-
-  walk(traits, []);
-  return out;
-}
-
 /** Reusable string→div renderer for SVG/HTML plugins. Owns the container:
  *  holds seed + overrides + resolved config, recomputes and swaps `innerHTML`
- *  on `update`/`setConfig`, and clears on `destroy`. Not part of the public API
- *  surface — import from `@seedstone/core/plugin` for plugin authoring. */
-export function mountString<C>(
+ *  on `update`/`setOverrides`, and clears on `destroy`. */
+export function mountString<C, O extends object = object>(
   container: HTMLElement,
   seed: string,
-  resolve: (seed: string, overrides: object) => C,
+  resolve: (seed: string, overrides: O) => C,
   render: (config: C) => string,
-  options: CreateOptions = {},
-): View<C> {
+  options: CreateOptions<O> = {},
+): View<C, O> {
   let currentSeed = seed;
-  let overrides: object = options.config ?? {};
+  let overrides = options.overrides ?? ({} as O);
   let config = resolve(currentSeed, overrides);
 
   const paint = () => {
@@ -101,7 +61,7 @@ export function mountString<C>(
       config = resolve(currentSeed, overrides);
       paint();
     },
-    setConfig(next: object = {}) {
+    setOverrides(next: O = {} as O) {
       overrides = next;
       config = resolve(currentSeed, overrides);
       paint();

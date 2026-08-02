@@ -1,5 +1,5 @@
 /**
- * meowtar — trait declaration and resolver for a deterministic flat-design cat bust.
+ * Cat trait declaration and resolver for a deterministic flat-design cat bust.
  *
  * Built entirely on the core engine: declare each trait as `constant`, `seeded`,
  * or `pick`, hand the tree a seed, and `derive` resolves it. No three.js, no
@@ -18,13 +18,13 @@ import {
 } from "../../core/index";
 import { buildPalette } from "./palette";
 import { nameFor } from "./name";
-import type { MeowtarConfig } from "./draw";
+import type { CatConfig } from "./draw";
 
 const PATTERNS = ["plain", "striped", "masked", "patched", "speckled", "blaze"] as const;
 const MOODS = ["calm", "smug", "wide", "sleepy", "derp"] as const;
 const EAR_SHAPES = ["upright", "folded"] as const;
 
-export const meowtarTraits = {
+export const catTraits = {
   coat: {
     hue: seeded(0, 360),
     saturation: seeded(0.48, 0.92),
@@ -56,14 +56,14 @@ export const meowtarTraits = {
   mood: pick(() => [...MOODS]),
 };
 
-export type MeowtarTraits = typeof meowtarTraits;
-export type MeowtarValues = Config<MeowtarTraits>;
-export type MeowtarOverrides = Override<MeowtarTraits>;
+export type CatTraits = typeof catTraits;
+export type CatValues = Config<CatTraits>;
+export type CatOverrides = Override<CatTraits>;
 
-export function resolveMeowtar(seed: string, overrides?: MeowtarOverrides): MeowtarConfig {
-  const values: MeowtarValues = derive(merge<MeowtarTraits>(meowtarTraits, overrides), seed);
-  const rngSeed = Math.floor(sampleUnit(seed, "meowtar.marks") * 4294967296);
+export function resolveCat(seed: string, overrides?: CatOverrides): CatConfig {
+  const values: CatValues = derive(merge<CatTraits>(catTraits, overrides), seed);
+  const rngSeed = Math.floor(sampleUnit(seed, "cat.marks") * 4294967296);
   return { ...values, palette: buildPalette(values), name: nameFor(seed), rngSeed };
 }
 
-export default resolveMeowtar;
+export default resolveCat;

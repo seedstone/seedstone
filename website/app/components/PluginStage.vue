@@ -43,7 +43,7 @@ function mount(): void {
     height: s,
     background: null,
     targetFPS: props.targetFPS,
-    config: props.overrides,
+    overrides: props.overrides,
     onReady: () => {
       if (id !== mountId) return;
       loading.value = false;
@@ -80,7 +80,7 @@ watch(
 watch(
   () => props.overrides,
   (overrides) => {
-    instance?.setConfig(overrides ?? {});
+    instance?.setOverrides(overrides ?? {});
     emitConfig();
   },
   { deep: true },

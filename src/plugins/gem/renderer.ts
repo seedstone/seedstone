@@ -10,7 +10,7 @@ import { Sparkles } from "./sparkles";
 
 export type { GemOverrides };
 
-export interface SeedstoneOptions {
+export interface GemRendererOptions {
   /** Element the canvas is appended to. Required. */
   container: HTMLElement;
   /** Canvas size in px. Defaults to the container's client size. */
@@ -25,7 +25,7 @@ export interface SeedstoneOptions {
   /** Cap the render loop frame rate. Useful for gallery thumbnails (e.g. 24). */
   targetFPS?: number;
   /** Pin or seed any trait for this instance, e.g. `{ gem: { cut: 'garnet', hue: 200 } }`. */
-  config?: GemOverrides;
+  overrides?: GemOverrides;
   /** Keep the drawing buffer readable for canvas.toDataURL(). Costs performance. Default: false. */
   preserveDrawingBuffer?: boolean;
   /** Called once the shaders are compiled and the first frame is painted —
@@ -43,7 +43,7 @@ export interface SeedstoneOptions {
  * and only the geometry build, PMREM env bake, or sparkle scatter whose inputs
  * changed is redone.
  */
-export class SeedstoneRenderer {
+export class GemRenderer {
   private traits: GemTraits; // trait tree with instance overrides applied
   private renderer: THREE.WebGLRenderer;
   private scene: THREE.Scene;
@@ -66,8 +66,8 @@ export class SeedstoneRenderer {
   /** The resolved per-seed config currently being rendered. Read-only. */
   config: GemConfig;
 
-  constructor(seed: string, options: SeedstoneOptions) {
-    this.traits = merge<GemTraits>(gemTraits, options.config);
+  constructor(seed: string, options: GemRendererOptions) {
+    this.traits = merge<GemTraits>(gemTraits, options.overrides);
     this.seed = seed;
     this.config = derive(this.traits, seed);
 
@@ -228,10 +228,10 @@ export class SeedstoneRenderer {
   }
 
   /**
-   * Re-apply config overrides on a live instance, replacing any previous ones.
+   * Re-apply trait overrides on a live instance, replacing any previous ones.
    * Intended for theming and interactive tuning, not per-frame use.
    */
-  setConfig(overrides: GemOverrides = {}): void {
+  setOverrides(overrides: GemOverrides = {}): void {
     if (this.destroyed) return;
     this.traits = merge<GemTraits>(gemTraits, overrides);
     this.config = derive(this.traits, this.seed);

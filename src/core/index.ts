@@ -13,14 +13,6 @@ export type {
 export { sampleUnit, mulberry32, hash2D } from "./random";
 export { hslToHex } from "./color";
 
-export type {
-  Plugin,
-  View,
-  CreateOptions,
-  LabControl,
-  LabSlider,
-  LabOptions,
-  LabControls,
-} from "./contract";
+export type { Plugin, View, CreateOptions } from "./contract";
 
-export { definePlugin, create, buildLabControls, mountString } from "./plugin";
+export { definePlugin, create, mountString } from "./plugin";

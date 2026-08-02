@@ -16,25 +16,22 @@ useHead({
 });
 
 useSeoMeta({
-  title:
-    "Seedstone | Generate Unique Digital Identities, Avatars & NFT Art from Any String",
+  title: "Seedstone | Generate Unique Digital Identities, Avatars & NFT Art from Any String",
 
   description:
     "Turn any text, wallet address, username, or AI agent into a unique visual identity. Create avatars, NFT collections, digital signatures, and generative art.",
 
-  ogTitle:
-    "Seedstone | Unique Digital Identities from Any String",
+  ogTitle: "Seedstone | Unique Digital Identities from Any String",
 
   ogDescription:
     "Generate avatars, NFT art, wallet identities, and AI agent visuals from any string.",
 
   twitterCard: "summary_large_image",
 
-  twitterTitle:
-    "Generate Unique Digital Identities from Any String",
+  twitterTitle: "Generate Unique Digital Identities from Any String",
 
   twitterDescription:
-    "Create avatars, NFT art, digital signatures, and AI agent identities from any text."
+    "Create avatars, NFT art, digital signatures, and AI agent identities from any text.",
 });
 
 let revealObs: IntersectionObserver | null = null;

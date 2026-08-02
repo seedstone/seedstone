@@ -1,21 +1,21 @@
 import { describe, it, expect } from "vitest";
 import { constant } from "../src/core/index";
-import { renderMeowtar } from "../src/plugins/meowtar/index";
-import { resolveMeowtar, meowtarTraits } from "../src/plugins/meowtar/config";
+import { renderCat } from "../src/plugins/cat/index";
+import { resolveCat, catTraits } from "../src/plugins/cat/config";
 
-describe("meowtar (core-only SVG cat)", () => {
+describe("cat (core-only SVG)", () => {
   it("same seed always renders the same cat", () => {
     for (const seed of ["alice", "bob", "0xC0FFEE", "moe"]) {
-      expect(renderMeowtar(seed)).toBe(renderMeowtar(seed));
+      expect(renderCat(seed)).toBe(renderCat(seed));
     }
   });
 
   it("different seeds render different cats", () => {
-    expect(renderMeowtar("alice")).not.toBe(renderMeowtar("bob"));
+    expect(renderCat("alice")).not.toBe(renderCat("bob"));
   });
 
   it("emits a well-formed, asset-free SVG", () => {
-    const svg = renderMeowtar("alice");
+    const svg = renderCat("alice");
     expect(svg.startsWith("<svg")).toBe(true);
     expect(svg.endsWith("</svg>")).toBe(true);
     expect(svg).toContain('viewBox="0 0 256 256"');
@@ -26,14 +26,14 @@ describe("meowtar (core-only SVG cat)", () => {
   });
 
   it("resolves a palette of #rrggbb colours and a name", () => {
-    const c = resolveMeowtar("alice");
+    const c = resolveCat("alice");
     expect(c.name).toMatch(/^[A-Z][a-z]+$/);
     for (const v of Object.values(c.palette)) expect(v).toMatch(/^#[0-9a-f]{6}$/);
   });
 
   it("pins traits via overrides across all seeds", () => {
     for (const seed of ["alice", "bob", "charlie"]) {
-      const c = resolveMeowtar(seed, {
+      const c = resolveCat(seed, {
         coat: { pattern: constant("striped") },
         mood: constant("smug"),
       });
@@ -46,13 +46,12 @@ describe("meowtar (core-only SVG cat)", () => {
     const patterns = ["plain", "striped", "masked", "patched", "speckled", "blaze"] as const;
     const moods = ["calm", "smug", "wide", "sleepy", "derp"] as const;
     for (const pattern of patterns)
-      expect(renderMeowtar("x", { coat: { pattern: constant(pattern) } })).toContain("<svg");
-    for (const mood of moods)
-      expect(renderMeowtar("x", { mood: constant(mood) })).toContain("<svg");
+      expect(renderCat("x", { coat: { pattern: constant(pattern) } })).toContain("<svg");
+    for (const mood of moods) expect(renderCat("x", { mood: constant(mood) })).toContain("<svg");
   });
 
   it("exposes the trait declaration for registry/UI use", () => {
-    expect(Object.keys(meowtarTraits)).toEqual(
+    expect(Object.keys(catTraits)).toEqual(
       expect.arrayContaining(["coat", "face", "ears", "eyes", "whiskers", "mood"]),
     );
   });

@@ -1,7 +1,7 @@
 /**
  * The drawing — builds a flat-design fox bust onto an svg.js canvas.
  *
- * Unlike meowtar (string concatenation), the fox is drawn with the svg.js
+ * Unlike the cat renderer (string concatenation), the fox is drawn with the svg.js
  * element API: the same `drawFox(canvas, config)` runs against a browser <svg>
  * (real DOM) or a headless svgdom document (see ./render). A face-forward bust
  * with pointed ears, a white muzzle mask, slanted eyes, and a gradiented coat;

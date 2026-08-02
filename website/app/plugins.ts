@@ -1,12 +1,13 @@
 import {
-  catPlugin,
-  gemPlugin,
-  foxPlugin,
-  type MeowtarConfig,
+  cat,
+  gem,
+  fox,
+  type CatConfig,
   type GemConfig,
   type FoxConfig,
   type Plugin,
 } from "seedstone";
+import { buildLabControls, gemLabControls, type LabControls } from "~/lab-controls";
 
 export interface SummaryStat {
   label: string;
@@ -23,6 +24,7 @@ export interface Summary {
 
 export interface SitePlugin {
   plugin: Plugin;
+  controls: LabControls;
   importName?: string;
   noun?: string;
   lede?: string;
@@ -80,7 +82,7 @@ function gemSummary(config: unknown): Summary {
 }
 
 function catSummary(config: unknown): Summary {
-  const c = config as MeowtarConfig | null;
+  const c = config as CatConfig | null;
   return {
     title: c?.name ?? "Cat avatar",
     swatch: c?.palette.coat,
@@ -159,24 +161,27 @@ export function fallbackSummary(config: unknown, seed: string, plugin: Plugin): 
 
 export const sitePlugins: SitePlugin[] = [
   {
-    plugin: gemPlugin,
-    importName: "gemPlugin",
+    plugin: gem,
+    controls: gemLabControls,
+    importName: "gem",
     noun: "gemstone",
     lede: "Type a username, wallet, company, or AI agent — Seedstone forges a unique 3D gem as its permanent visual identity.",
     sampleSeeds: DEFAULT_SAMPLE_SEEDS,
     summarize: gemSummary,
   },
   {
-    plugin: catPlugin,
-    importName: "catPlugin",
+    plugin: cat,
+    controls: buildLabControls(cat.traits),
+    importName: "cat",
     noun: "cat",
     lede: "Type a username, wallet, company, or AI agent — Seedstone draws a deterministic SVG cat as its permanent visual identity.",
     sampleSeeds: ["@satoshi", "Mochi-77", "0x71C7...976F", "Patchwork Labs", "DOC-99812"],
     summarize: catSummary,
   },
   {
-    plugin: foxPlugin,
-    importName: "foxPlugin",
+    plugin: fox,
+    controls: buildLabControls(fox.traits),
+    importName: "fox",
     noun: "fox",
     lede: "Type a username, wallet, company, or AI agent — Seedstone draws a deterministic SVG fox as its permanent visual identity.",
     sampleSeeds: ["@satoshi", "Reynard", "0x71C7...976F", "Foxglove Labs", "DOC-99812"],

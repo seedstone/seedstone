@@ -52,8 +52,8 @@
     <!-- Build the library first: npm install && npm run build -->
     <script src="../dist/seedstone.standalone.js"></script>
     <script>
-      const { create, gemPlugin, catPlugin, foxPlugin } = window.Seedstone;
-      const plugins = { gem: gemPlugin, cat: catPlugin, fox: foxPlugin };
+      const { create, gem, cat, fox } = window.Seedstone;
+      const plugins = { gem, cat, fox };
 
       const art = document.getElementById("art");
       const seed = document.getElementById("seed");

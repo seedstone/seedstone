@@ -41,5 +41,5 @@ const NAMES = [
 
 /** Pick a name deterministically from the seed. */
 export function nameFor(seed: string): string {
-  return NAMES[Math.floor(sampleUnit(seed, "meowtar.name") * NAMES.length)];
+  return NAMES[Math.floor(sampleUnit(seed, "cat.name") * NAMES.length)];
 }

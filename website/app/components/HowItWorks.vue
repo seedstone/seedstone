@@ -3,23 +3,23 @@ const HOW_STEPS = [
   {
     n: "01",
     title: "Enter any string",
-    desc: "Start with a name, wallet address, AI agent, company, domain, or any piece of text."
+    desc: "Start with a name, wallet address, AI agent, company, domain, or any piece of text.",
   },
   {
     n: "02",
     title: "Generate a unique fingerprint",
-    desc: "Seedstone transforms your input into a deterministic visual fingerprint that is unique to that string."
+    desc: "Seedstone transforms your input into a deterministic visual fingerprint that is unique to that string.",
   },
   {
     n: "03",
     title: "Create a digital gem",
-    desc: "The fingerprint defines the gemstone's shape, facets, colors, and visual characteristics."
+    desc: "The fingerprint defines the gemstone's shape, facets, colors, and visual characteristics.",
   },
   {
     n: "04",
     title: "Use it anywhere",
-    desc: "Use your gem as an avatar, NFT, wallet identity, AI agent profile, digital signature, or collectible artwork."
-  }
+    desc: "Use your gem as an avatar, NFT, wallet identity, AI agent profile, digital signature, or collectible artwork.",
+  },
 ];
 </script>
 

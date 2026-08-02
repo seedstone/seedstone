@@ -1,5 +1,39 @@
-import { buildLabControls, type LabControls } from "../../core/index";
-import { gemTraits } from "./config";
+import { gemTraits, isConstant, isPick, isSeeded, type Traits } from "seedstone";
+
+export type LabSlider = { min: number; max: number };
+export type LabOptions = string[];
+export type LabControl = LabSlider | LabOptions;
+export type LabControls = Record<string, LabControl>;
+
+/** Build website tuning controls from a plugin's trait declaration. */
+export function buildLabControls(
+  traits: Traits,
+  ranges: Record<string, LabSlider> = {},
+): LabControls {
+  const controls: LabControls = {};
+
+  const walk = (node: unknown, path: string[]): void => {
+    const dotted = path.join(".");
+    if (isSeeded(node)) {
+      controls[dotted] = ranges[dotted] ?? { min: node.min, max: node.max };
+      return;
+    }
+    if (isConstant(node)) {
+      if (typeof node.value === "number" && dotted in ranges) controls[dotted] = ranges[dotted]!;
+      return;
+    }
+    if (isPick(node)) {
+      controls[dotted] = node.options();
+      return;
+    }
+    if (node && typeof node === "object" && !Array.isArray(node)) {
+      for (const [key, child] of Object.entries(node)) walk(child, [...path, key]);
+    }
+  };
+
+  walk(traits, []);
+  return controls;
+}
 
 const ranges = {
   "camera.fov": { min: 10, max: 80 },
@@ -50,4 +84,4 @@ const ranges = {
   "sparkles.pulseRate": { min: 0, max: 3 },
 };
 
-export const gemLab: LabControls = buildLabControls(gemTraits, ranges);
+export const gemLabControls: LabControls = buildLabControls(gemTraits, ranges);
