@@ -16,7 +16,7 @@ src/
 
 The dependency direction is one-way: plugins depend on core; core never imports
 a plugin or website concern. Lab controls, copy, sample seeds, and summaries
-belong to `website/`.
+belong to the separate [Seedstone website](https://github.com/seedstone/website).
 
 ## Mental model
 
