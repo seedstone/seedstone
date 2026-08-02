@@ -35,8 +35,12 @@ const activeSeed = computed(() => {
   return caseInsensitive.value ? raw.toLowerCase() : raw;
 });
 
-watch(inputValue, (val) => {
-  router.replace({ query: val.trim() ? { seed: val.trim() } : {} });
+watch([inputValue, () => active.value.plugin.id], ([value, plugin]) => {
+  const query = { ...route.query, plugin };
+  const seed = value.trim();
+  if (seed) query.seed = seed;
+  else delete query.seed;
+  router.replace({ query });
 });
 
 watch(
