@@ -75,7 +75,7 @@ defineExpose({
 
           <p class="lede">
             Transform any name, wallet address, AI agent, company, or piece of text into
-            a unique gemstone-inspired visual identity.
+            a unique visual identity.
             <strong>
               The same input always creates the exact same result.
             </strong>

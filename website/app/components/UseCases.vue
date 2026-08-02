@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
         </h2>
 
         <p class="sec-lede">
-          Generate unique gemstone-inspired avatars, NFT artwork, wallet identities,
+          Generate unique avatars, NFT artwork, wallet identities,
           AI agent profiles, and visual signatures from any string.
         </p>
       </div>

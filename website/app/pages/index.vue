@@ -20,13 +20,13 @@ useSeoMeta({
     "Seedstone | Generate Unique Digital Identities, Avatars & NFT Art from Any String",
 
   description:
-    "Turn any text, wallet address, username, or AI agent into a unique gemstone-inspired visual identity. Create avatars, NFT collections, digital signatures, and generative art.",
+    "Turn any text, wallet address, username, or AI agent into a unique visual identity. Create avatars, NFT collections, digital signatures, and generative art.",
 
   ogTitle:
     "Seedstone | Unique Digital Identities from Any String",
 
   ogDescription:
-    "Generate gemstone-inspired avatars, NFT art, wallet identities, and AI agent visuals from any string.",
+    "Generate avatars, NFT art, wallet identities, and AI agent visuals from any string.",
 
   twitterCard: "summary_large_image",
 
