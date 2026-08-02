@@ -6,7 +6,7 @@ const packageJson = JSON.parse(
 );
 
 export const banner = `/**
- * seedstone v${packageJson.version} — https://github.com/titangmz/seedstone
+ * seedstone v${packageJson.version} — https://github.com/seedstone/seedstone
  * MIT License
  */`;
 

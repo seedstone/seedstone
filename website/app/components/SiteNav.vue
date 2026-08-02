@@ -69,7 +69,7 @@ function scrollTo(id: string, e: MouseEvent) {
           </select>
         </label>
         <a
-          href="https://github.com/titangmz/seedstone"
+          href="https://github.com/seedstone/seedstone"
           target="_blank"
           rel="noopener noreferrer"
           class="nav-icon-btn"

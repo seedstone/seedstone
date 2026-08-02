@@ -17,13 +17,13 @@
   ],
   "homepage": "https://seedstone.xyz",
   "bugs": {
-    "url": "https://github.com/titangmz/seedstone/issues"
+    "url": "https://github.com/seedstone/seedstone/issues"
   },
   "license": "MIT",
   "author": "titangmz",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/titangmz/seedstone.git"
+    "url": "git+https://github.com/seedstone/seedstone.git"
   },
   "files": [
     "dist",
