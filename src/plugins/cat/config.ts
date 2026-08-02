@@ -6,10 +6,10 @@ import {
   sampleUnit,
   type Config,
   type Override,
-} from "../../core/index";
-import { buildPalette } from "./palette";
-import { nameFor } from "./name";
-import type { CatConfig } from "./draw";
+} from "../../core/index.js";
+import { buildPalette } from "./palette.js";
+import { nameFor } from "./name.js";
+import type { Palette } from "./palette.js";
 
 const PATTERNS = ["plain", "striped", "masked", "patched", "speckled", "blaze"] as const;
 const MOODS = ["calm", "smug", "wide", "sleepy", "derp"] as const;
@@ -50,6 +50,11 @@ export const catTraits = {
 export type CatTraits = typeof catTraits;
 export type CatValues = Config<CatTraits>;
 export type CatOverrides = Override<CatTraits>;
+export interface CatConfig extends CatValues {
+  palette: Palette;
+  name: string;
+  rngSeed: number;
+}
 
 export function resolveCat(seed: string, overrides?: CatOverrides): CatConfig {
   const values: CatValues = derive(merge<CatTraits>(catTraits, overrides), seed);

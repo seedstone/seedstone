@@ -1,6 +1,12 @@
-import { definePlugin, mountString } from "../../core/index";
-import { catTraits, resolveCat, type CatTraits, type CatOverrides } from "./config";
-import { drawCat, type CatConfig } from "./draw";
+import { definePlugin, mountString } from "../../core/index.js";
+import {
+  catTraits,
+  resolveCat,
+  type CatTraits,
+  type CatOverrides,
+  type CatConfig,
+} from "./config.js";
+import { drawCat } from "./draw.js";
 
 export const cat = definePlugin<CatTraits, CatConfig>({
   id: "cat",

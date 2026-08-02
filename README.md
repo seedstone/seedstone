@@ -67,6 +67,19 @@ import { renderCat } from "seedstone/cat";
 const svg = renderCat("alice");
 ```
 
+Gem-specific controls remain typed when using the common runtime:
+
+```ts
+const view = create(gem, "#avatar", "alice", {
+  autoRotate: false,
+  pixelRatio: 1,
+  preserveDrawingBuffer: true,
+});
+
+view.play();
+view.pause();
+```
+
 ## Writing a plugin
 
 “Plugin” is the extension-system term; consumers normally work with short
@@ -109,7 +122,7 @@ their authoring API from `seedstone/core`:
 ```json
 {
   "peerDependencies": {
-    "seedstone": "^2.0.0"
+    "seedstone": "^3.0.0"
   }
 }
 ```
@@ -121,6 +134,10 @@ See [`src/README.md`](src/README.md) for the engine and plugin architecture.
 The consumer runtime, trait engine, plugin contract, and documented entry
 points follow semver. Plugin-specific rendering internals are not public unless
 their entry point exports them.
+
+Seed-derived configurations and bundled visual output remain stable across v3
+minor and patch releases. An intentional identity change requires a new major
+version. See [MIGRATION.md](MIGRATION.md) when upgrading from v2.
 
 ## Development
 

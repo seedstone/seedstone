@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { hslToHex } from "../../core/index";
-import type { GemConfig } from "./config";
+import { hslToHex } from "../../core/index.js";
+import type { GemConfig } from "./config.js";
 
 type OrbitConfig = GemConfig["lights"]["orbits"][number];
 

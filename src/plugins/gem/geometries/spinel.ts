@@ -1,5 +1,5 @@
-import { buildRegularPolyhedron } from "./lib/platonic";
-import type { GemCutModule } from "./index";
+import { buildRegularPolyhedron } from "./lib/platonic.js";
+import type { GemCutModule } from "./index.js";
 
 const mod: GemCutModule = {
   name: "spinel",

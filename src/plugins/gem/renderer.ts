@@ -1,27 +1,30 @@
 import * as THREE from "three";
-import { merge, derive } from "../../core/index";
-import { gemTraits, type GemTraits, type GemConfig, type GemOverrides } from "./config";
-import { Environment } from "./environment";
-import { GemMesh } from "./mesh";
-import { Lights } from "./lights";
-import { Sparkles } from "./sparkles";
+import { merge, derive, type CreateOptions, type View } from "../../core/index.js";
+import { gemTraits, type GemTraits, type GemConfig, type GemOverrides } from "./config.js";
+import { Environment } from "./environment.js";
+import { GemMesh } from "./mesh.js";
+import { Lights } from "./lights.js";
+import { Sparkles } from "./sparkles.js";
 
 export type { GemOverrides };
 
-export interface GemRendererOptions {
-  container: HTMLElement;
-  width?: number;
-  height?: number;
-  background?: string | number | null;
+export interface GemOptions extends CreateOptions<GemOverrides> {
   autoRotate?: boolean;
   pixelRatio?: number;
-  targetFPS?: number;
-  overrides?: GemOverrides;
   preserveDrawingBuffer?: boolean;
-  onReady?: () => void;
 }
 
-export class GemRenderer {
+export interface GemView extends View<GemConfig, GemOverrides> {
+  readonly seed: string;
+  pause(): void;
+  play(): void;
+}
+
+interface GemRendererOptions extends GemOptions {
+  container: HTMLElement;
+}
+
+export class GemRenderer implements GemView {
   private traits: GemTraits;
   private renderer: THREE.WebGLRenderer;
   private scene: THREE.Scene;

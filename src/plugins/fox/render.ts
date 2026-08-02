@@ -1,7 +1,7 @@
 import { createSVGWindow } from "svgdom";
 import { SVG, registerWindow, type Svg } from "@svgdotjs/svg.js";
-import { resolveFox, type FoxOverrides } from "./config";
-import { drawFox } from "./draw";
+import { resolveFox, type FoxOverrides } from "./config.js";
+import { drawFox } from "./draw.js";
 
 /** Renders a fox to an SVG string using svgdom. */
 export function renderFox(seed: string, overrides?: FoxOverrides): string {

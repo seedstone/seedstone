@@ -1,4 +1,4 @@
-import { sampleUnit } from "./random";
+import { sampleUnit } from "./random.js";
 
 export interface ConstantTrait<V extends number | string = number | string> {
   readonly kind: "constant";
@@ -11,9 +11,9 @@ export interface SeededTrait {
   readonly max: number;
 }
 
-export interface PickTrait {
+export interface PickTrait<V extends string = string> {
   readonly kind: "pick";
-  readonly options: () => string[];
+  readonly options: () => readonly V[];
 }
 
 export type Trait = ConstantTrait | SeededTrait | PickTrait;
@@ -26,7 +26,7 @@ export function seeded(min: number, max: number): SeededTrait {
   return { kind: "seeded", min, max };
 }
 
-export function pick(options: () => string[]): PickTrait {
+export function pick<const V extends string>(options: () => readonly V[]): PickTrait<V> {
   return { kind: "pick", options };
 }
 
@@ -48,22 +48,36 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 
 export type Traits = Record<string, unknown>;
 
+type Widen<V> = V extends number ? number : V extends string ? string : V;
+
 export type Config<T> =
   T extends ConstantTrait<infer V>
-    ? V
+    ? Widen<V>
     : T extends SeededTrait
       ? number
-      : T extends PickTrait
-        ? string
+      : T extends PickTrait<infer V>
+        ? V
         : T extends readonly unknown[]
           ? T
           : T extends object
             ? { [K in keyof T]: Config<T[K]> }
             : T;
 
-/** A deep-partial trait tree. Raw numbers and strings become constants. */
+type TraitOverride<T extends Trait> = T extends SeededTrait
+  ? number | ConstantTrait<number> | SeededTrait
+  : T extends PickTrait<infer V>
+    ? V | ConstantTrait<V> | PickTrait<V>
+    : T extends ConstantTrait<infer V>
+      ? V extends number
+        ? number | ConstantTrait<number> | SeededTrait
+        : V extends string
+          ? string | ConstantTrait<string> | PickTrait<string>
+          : never
+      : never;
+
+/** A deep-partial trait tree. Raw values become type-compatible constants. */
 export type Override<T> = T extends Trait
-  ? Trait | number | string
+  ? TraitOverride<T>
   : T extends readonly unknown[]
     ? T
     : T extends object

@@ -1,5 +1,5 @@
-import { hslToHex } from "../../core/index";
-import type { CatValues } from "./config";
+import { hslToHex } from "../../core/index.js";
+import type { CatValues } from "./config.js";
 
 export interface Palette {
   coatLight: string;

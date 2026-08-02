@@ -1,13 +1,6 @@
 import type { Svg } from "@svgdotjs/svg.js";
-import { mulberry32 } from "../../core/index";
-import type { FoxValues } from "./config";
-import type { Palette } from "./palette";
-
-export interface FoxConfig extends FoxValues {
-  palette: Palette;
-  name: string;
-  rngSeed: number;
-}
+import { mulberry32 } from "../../core/index.js";
+import type { FoxConfig } from "./config.js";
 
 const CX = 128;
 const r = (n: number) => Math.round(n * 100) / 100;

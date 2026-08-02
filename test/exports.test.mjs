@@ -4,7 +4,7 @@ import { create, gem as rootGem, cat as rootCat, fox as rootFox } from "seedston
 import { definePlugin } from "seedstone/core";
 import { gem } from "seedstone/gem";
 import { cat, renderCat } from "seedstone/cat";
-import { fox } from "seedstone/fox";
+import { fox, foxTraits } from "seedstone/fox";
 
 describe("package entry points", () => {
   it("exports the consumer API and direct plugin entry points", () => {
@@ -16,6 +16,7 @@ describe("package entry points", () => {
     expect(gem.id).toBe("gem");
     expect(cat.id).toBe("cat");
     expect(fox.id).toBe("fox");
+    expect(foxTraits).toBe(fox.traits);
     expect(renderCat("alice")).toContain("<svg");
   });
 

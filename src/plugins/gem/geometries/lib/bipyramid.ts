@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { flatNormalGeo, pushTri } from "./geometry";
+import { flatNormalGeo, pushTri } from "./geometry.js";
 
 /** Builds a bipyramid with an even number of triangular faces. */
 export function buildBipyramid(N: number, scale = 0.65): THREE.BufferGeometry {

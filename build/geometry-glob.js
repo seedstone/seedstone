@@ -1,8 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const packageJson = JSON.parse(
+  fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+);
+
 export const banner = `/**
- * seedstone v2.0.0 — https://github.com/titangmz/seedstone
+ * seedstone v${packageJson.version} — https://github.com/titangmz/seedstone
  * MIT License
  */`;
 

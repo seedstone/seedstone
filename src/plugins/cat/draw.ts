@@ -1,12 +1,5 @@
-import { mulberry32 } from "../../core/index";
-import type { CatValues } from "./config";
-import type { Palette } from "./palette";
-
-export interface CatConfig extends CatValues {
-  palette: Palette;
-  name: string;
-  rngSeed: number;
-}
+import { mulberry32 } from "../../core/index.js";
+import type { CatConfig } from "./config.js";
 
 function f(n: number): string {
   const r = Math.round(n * 100) / 100;

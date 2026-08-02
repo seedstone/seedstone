@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { extractFlatNormals } from "./geometry";
+import { extractFlatNormals } from "./geometry.js";
 
 /** Builds an icosahedron subdivided `detail` times. */
 export function buildGeodesicSphere(detail: number, scale = 0.65): THREE.BufferGeometry {

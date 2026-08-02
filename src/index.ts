@@ -11,7 +11,7 @@ export {
   mulberry32,
   hash2D,
   hslToHex,
-} from "./core/index";
+} from "./core/index.js";
 
 export type {
   Trait,
@@ -21,22 +21,36 @@ export type {
   Traits,
   Config,
   Override,
-} from "./core/index";
+} from "./core/index.js";
 
-export { definePlugin, create } from "./core/index";
-export type { Plugin, View, CreateOptions } from "./core/index";
+export { definePlugin, create } from "./core/index.js";
+export type { Plugin, PluginOptions, PluginView, View, CreateOptions } from "./core/index.js";
 
-export { gem, gemTraits, buildGeometry, listCuts } from "./plugins/gem/index";
-export type { GemConfig, GemTraits, GemOverrides, GemCut, GemCutModule } from "./plugins/gem/index";
+export { gem, gemTraits, buildGeometry, listCuts } from "./plugins/gem/index.js";
+export type {
+  GemConfig,
+  GemTraits,
+  GemOverrides,
+  GemOptions,
+  GemView,
+  GemCut,
+  GemCutModule,
+} from "./plugins/gem/index.js";
 
-export { cat, catTraits, renderCat } from "./plugins/cat/index";
-export type { CatConfig, CatTraits, CatOverrides, CatValues, Palette } from "./plugins/cat/index";
+export { cat, catTraits, renderCat } from "./plugins/cat/index.js";
+export type {
+  CatConfig,
+  CatTraits,
+  CatOverrides,
+  CatValues,
+  Palette,
+} from "./plugins/cat/index.js";
 
-export { fox } from "./plugins/fox/index";
+export { fox, foxTraits } from "./plugins/fox/index.js";
 export type {
   FoxConfig,
   FoxTraits,
   FoxOverrides,
   FoxValues,
   FoxPalette,
-} from "./plugins/fox/index";
+} from "./plugins/fox/index.js";

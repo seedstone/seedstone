@@ -50,21 +50,23 @@ leaf; `seeded(...)` and `pick(...)` can make it seed-driven again.
 `Plugin` is deliberately a small functional descriptor:
 
 ```ts
-interface Plugin<T extends Traits, C> {
+interface Plugin<
+  T extends Traits = Traits,
+  C = unknown,
+  O extends CreateOptions<Override<T>> = CreateOptions<Override<T>>,
+  V extends View<C, Override<T>> = View<C, Override<T>>,
+> {
   id: string;
   name: string;
   traits: T;
-  mount(
-    container: HTMLElement,
-    seed: string,
-    options?: CreateOptions<Override<T>>,
-  ): View<C, Override<T>>;
+  mount(container: HTMLElement, seed: string, options?: O): V;
 }
 ```
 
 Consumers pass a plugin to `create(plugin, target, seed, options?)`. `create`
 resolves and validates the DOM target, validates the seed, and calls the mount
-hook. A returned view owns its container and supports:
+hook. A returned view owns the content and resources it mounts inside the
+container and supports:
 
 ```ts
 interface View<C, O> {
@@ -85,7 +87,7 @@ Bundled plugins use this convention:
 ```text
 my-plugin/
   config.ts   traits, config/override types, resolver
-  render.ts   drawing or renderer lifecycle
+  draw.ts, render.ts, or renderer.ts   drawing or renderer lifecycle
   plugin.ts   definePlugin descriptor
   index.ts    intentional public exports
 ```
@@ -93,6 +95,10 @@ my-plugin/
 Use `mountString` for SVG or HTML implementations. It owns the seed, overrides,
 resolved config, repainting, and teardown. Stateful WebGL or canvas plugins can
 return a class implementing `View`, as the gem does.
+
+Plugins may specialize their options and returned view while retaining the
+common contract. `create()` infers those types from the selected plugin; the
+gem uses this for playback controls and WebGL-specific creation options.
 
 Every public plugin value uses a short domain noun (`gem`, `cat`, `fox`). The
 `Plugin` suffix is reserved for discussion of the extension mechanism and does

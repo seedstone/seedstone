@@ -1,5 +1,5 @@
-import { buildGeodesicSphere } from "./lib/geodesic";
-import type { GemCutModule } from "./index";
+import { buildGeodesicSphere } from "./lib/geodesic.js";
+import type { GemCutModule } from "./index.js";
 
 const mod: GemCutModule = {
   name: "zircon",

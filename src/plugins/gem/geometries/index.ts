@@ -18,7 +18,15 @@ for (const mod of Object.values(modules)) {
   }
 }
 
-export type GemCut = string;
+export type GemCut =
+  | "citrine"
+  | "fluorite"
+  | "garnet"
+  | "pyrite"
+  | "spinel"
+  | "tanzanite"
+  | "tourmaline"
+  | "zircon";
 
 /**
  * Build a BufferGeometry for the given cut.
@@ -29,6 +37,6 @@ export function buildGeometry(cut: GemCut): THREE.BufferGeometry {
   return mod.build();
 }
 
-export function listCuts(): string[] {
-  return [...GEM_CUTS.keys()].sort();
+export function listCuts(): GemCut[] {
+  return [...GEM_CUTS.keys()].sort() as GemCut[];
 }

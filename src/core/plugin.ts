@@ -1,17 +1,22 @@
-import type { Override, Traits } from "./traits";
-import type { Plugin, View, CreateOptions } from "./contract";
+import type { Override, Traits } from "./traits.js";
+import type { Plugin, View, CreateOptions } from "./contract.js";
 
-export function definePlugin<T extends Traits, C>(plugin: Plugin<T, C>): Plugin<T, C> {
+export function definePlugin<
+  T extends Traits,
+  C,
+  O extends CreateOptions<Override<T>> = CreateOptions<Override<T>>,
+  V extends View<C, Override<T>> = View<C, Override<T>>,
+>(plugin: Plugin<T, C, O, V>): Plugin<T, C, O, V> {
   return plugin;
 }
 
 /** Mounts a plugin into a DOM element. */
-export function create<T extends Traits, C>(
-  plugin: Plugin<T, C>,
-  target: string | HTMLElement,
-  seed: string,
-  options?: CreateOptions<Override<T>>,
-): View<C, Override<T>> {
+export function create<
+  T extends Traits,
+  C,
+  O extends CreateOptions<Override<T>>,
+  V extends View<C, Override<T>>,
+>(plugin: Plugin<T, C, O, V>, target: string | HTMLElement, seed: string, options?: O): V {
   const container = typeof target === "string" ? document.querySelector(target) : target;
   if (!(container instanceof HTMLElement)) {
     const where = typeof target === "string" ? ` for selector "${target}"` : "";

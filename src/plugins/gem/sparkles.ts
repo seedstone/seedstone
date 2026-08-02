@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { mulberry32 } from "../../core/index";
+import { mulberry32 } from "../../core/index.js";
 
 export interface SparklesConfig {
   count: number;

@@ -6,10 +6,10 @@ import {
   sampleUnit,
   type Config,
   type Override,
-} from "../../core/index";
-import { buildPalette } from "./palette";
-import { nameFor } from "./name";
-import type { FoxConfig } from "./draw";
+} from "../../core/index.js";
+import { buildPalette } from "./palette.js";
+import { nameFor } from "./name.js";
+import type { Palette } from "./palette.js";
 
 const PATTERNS = ["plain", "blaze", "masked", "sooty", "freckled"] as const;
 const EXPRESSIONS = ["sly", "alert", "calm", "sleepy", "playful"] as const;
@@ -48,6 +48,11 @@ export const foxTraits = {
 export type FoxTraits = typeof foxTraits;
 export type FoxValues = Config<FoxTraits>;
 export type FoxOverrides = Override<FoxTraits>;
+export interface FoxConfig extends FoxValues {
+  palette: Palette;
+  name: string;
+  rngSeed: number;
+}
 
 export function resolveFox(seed: string, overrides?: FoxOverrides): FoxConfig {
   const values: FoxValues = derive(merge<FoxTraits>(foxTraits, overrides), seed);

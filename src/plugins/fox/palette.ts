@@ -1,5 +1,5 @@
-import { hslToHex } from "../../core/index";
-import type { FoxValues } from "./config";
+import { hslToHex } from "../../core/index.js";
+import type { FoxValues } from "./config.js";
 
 export interface Palette {
   coatLight: string;

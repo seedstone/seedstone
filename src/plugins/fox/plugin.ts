@@ -1,7 +1,13 @@
 import { SVG } from "@svgdotjs/svg.js";
-import { definePlugin, type View } from "../../core/index";
-import { foxTraits, resolveFox, type FoxTraits, type FoxOverrides } from "./config";
-import { drawFox, type FoxConfig } from "./draw";
+import { definePlugin, type View } from "../../core/index.js";
+import {
+  foxTraits,
+  resolveFox,
+  type FoxTraits,
+  type FoxOverrides,
+  type FoxConfig,
+} from "./config.js";
+import { drawFox } from "./draw.js";
 
 export const fox = definePlugin<FoxTraits, FoxConfig>({
   id: "fox",

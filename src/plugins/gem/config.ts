@@ -6,8 +6,8 @@ import {
   merge,
   type Config,
   type Override,
-} from "../../core/index";
-import { listCuts } from "./geometries/index";
+} from "../../core/index.js";
+import { listCuts } from "./geometries/index.js";
 
 type Vec2 = [number, number];
 type Vec3 = [number, number, number];

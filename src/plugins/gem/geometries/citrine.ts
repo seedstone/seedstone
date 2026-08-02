@@ -1,5 +1,5 @@
-import { buildAntiprism } from "./lib/antiprism";
-import type { GemCutModule } from "./index";
+import { buildAntiprism } from "./lib/antiprism.js";
+import type { GemCutModule } from "./index.js";
 
 const mod: GemCutModule = {
   name: "citrine",

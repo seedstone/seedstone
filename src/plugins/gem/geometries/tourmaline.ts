@@ -1,5 +1,5 @@
-import { buildBipyramid } from "./lib/bipyramid";
-import type { GemCutModule } from "./index";
+import { buildBipyramid } from "./lib/bipyramid.js";
+import type { GemCutModule } from "./index.js";
 
 const mod: GemCutModule = {
   name: "tourmaline",

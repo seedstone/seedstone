@@ -1,5 +1,5 @@
-export { fox } from "./plugin";
+export { fox } from "./plugin.js";
+export { foxTraits } from "./config.js";
 
-export type { FoxTraits, FoxValues, FoxOverrides } from "./config";
-export type { FoxConfig } from "./draw";
-export type { Palette as FoxPalette } from "./palette";
+export type { FoxTraits, FoxValues, FoxOverrides, FoxConfig } from "./config.js";
+export type { Palette as FoxPalette } from "./palette.js";

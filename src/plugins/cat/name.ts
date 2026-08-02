@@ -1,4 +1,4 @@
-import { sampleUnit } from "../../core/index";
+import { sampleUnit } from "../../core/index.js";
 
 const NAMES = [
   "Marmalade",

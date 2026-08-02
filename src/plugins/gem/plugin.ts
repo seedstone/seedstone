@@ -1,8 +1,8 @@
-import { definePlugin } from "../../core/index";
-import { GemRenderer } from "./renderer";
-import { gemTraits, type GemTraits, type GemConfig } from "./config";
+import { definePlugin } from "../../core/index.js";
+import { GemRenderer, type GemOptions, type GemView } from "./renderer.js";
+import { gemTraits, type GemTraits, type GemConfig } from "./config.js";
 
-export const gem = definePlugin<GemTraits, GemConfig>({
+export const gem = definePlugin<GemTraits, GemConfig, GemOptions, GemView>({
   id: "gem",
   name: "Gemstone",
   traits: gemTraits,
@@ -13,7 +13,10 @@ export const gem = definePlugin<GemTraits, GemConfig>({
       width: options.width,
       height: options.height,
       background: options.background,
+      autoRotate: options.autoRotate,
+      pixelRatio: options.pixelRatio,
       targetFPS: options.targetFPS,
+      preserveDrawingBuffer: options.preserveDrawingBuffer,
       onReady: options.onReady,
     }),
 });

@@ -23,7 +23,7 @@ export default defineConfig([
     {
       input,
       plugins: [geometryGlob()],
-      output: { file: `dist/${name}.cjs`, format: "cjs", banner, sourcemap: true },
+      output: { file: `dist/${name}.cjs`, format: "cjs", banner },
     },
   ]),
   {
@@ -34,7 +34,6 @@ export default defineConfig([
       format: "umd",
       name: "Seedstone",
       banner,
-      sourcemap: true,
       minify: true,
     },
   },

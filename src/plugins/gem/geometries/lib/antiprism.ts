@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { flatNormalGeo, pushTri } from "./geometry";
+import { flatNormalGeo, pushTri } from "./geometry.js";
 
 /** Builds an n-antiprism with 4n-4 triangular faces. */
 export function buildAntiprism(n: number, scale = 0.65): THREE.BufferGeometry {

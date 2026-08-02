@@ -1,4 +1,4 @@
-export { constant, seeded, pick, derive, merge, isConstant, isSeeded, isPick } from "./traits";
+export { constant, seeded, pick, derive, merge, isConstant, isSeeded, isPick } from "./traits.js";
 
 export type {
   Trait,
@@ -8,11 +8,11 @@ export type {
   Traits,
   Config,
   Override,
-} from "./traits";
+} from "./traits.js";
 
-export { sampleUnit, mulberry32, hash2D } from "./random";
-export { hslToHex } from "./color";
+export { sampleUnit, mulberry32, hash2D } from "./random.js";
+export { hslToHex } from "./color.js";
 
-export type { Plugin, View, CreateOptions } from "./contract";
+export type { Plugin, PluginOptions, PluginView, View, CreateOptions } from "./contract.js";
 
-export { definePlugin, create, mountString } from "./plugin";
+export { definePlugin, create, mountString } from "./plugin.js";

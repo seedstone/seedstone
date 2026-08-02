@@ -85,9 +85,9 @@ export const sitePlugins: SitePlugin[] = [
 | `sampleSeeds` | no       | Seed suggestions; falls back to `DEFAULT_SAMPLE_SEEDS`.       |
 | `summarize`   | no       | Builds the Readout panel; falls back to `fallbackSummary`.    |
 
-That's the whole integration. The plugin's `id`, `name`, `traits`, and `lab`
-come from the plugin object itself, so the dropdown label and the lab controls
-are populated automatically.
+That's the whole integration. The plugin supplies `id`, `name`, and `traits`.
+Website-owned controls, copy, sample seeds, and summaries stay in `sitePlugins`
+and `app/lab-controls.ts` rather than expanding the runtime plugin contract.
 
 ### 3. (Optional) Add a Readout summary
 

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { extractFlatNormals } from "./geometry";
+import { extractFlatNormals } from "./geometry.js";
 
 // PolyhedronGeometry normalizes these cube vertices to the circumradius.
 const CUBE_VERTS = [

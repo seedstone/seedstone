@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { hash2D } from "../../../../core/random";
+import { hash2D } from "../../../../core/random.js";
 
 export const MAX_SCALE_JITTER = 0.85;
 
