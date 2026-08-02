@@ -1,24 +1,11 @@
-/**
- * The drawing — builds a flat-design fox bust onto an svg.js canvas.
- *
- * Unlike the cat renderer (string concatenation), the fox is drawn with the svg.js
- * element API: the same `drawFox(canvas, config)` runs against a browser <svg>
- * (real DOM) or a headless svgdom document (see ./render). A face-forward bust
- * with pointed ears, a white muzzle mask, slanted eyes, and a gradiented coat;
- * the seed scales the silhouette and swaps colour, markings, ear size, eye
- * colour, and expression — so every output is a valid fox.
- */
-
 import type { Svg } from "@svgdotjs/svg.js";
 import { mulberry32 } from "../../core/index";
 import type { FoxValues } from "./config";
 import type { Palette } from "./palette";
 
-/** A fox ready to draw: resolved traits, palette, name, and a placement seed. */
 export interface FoxConfig extends FoxValues {
   palette: Palette;
   name: string;
-  /** Integer seed for marking placement (freckles). */
   rngSeed: number;
 }
 
@@ -26,7 +13,6 @@ const CX = 128;
 const r = (n: number) => Math.round(n * 100) / 100;
 const clamp = (n: number, lo: number, hi: number) => (n < lo ? lo : n > hi ? hi : n);
 
-/** Draw a resolved fox onto an svg.js canvas (viewBox/size set by the caller). */
 export function drawFox(canvas: Svg, cfg: FoxConfig): void {
   const { coat, face, ears, eyes, snout, expression, palette: p } = cfg;
   const rng = mulberry32(cfg.rngSeed);
@@ -34,7 +20,7 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
   const fw = face.width;
   const es = ears.size;
   const sl = snout.length;
-  const hw = 78 * fw; // forehead half-width
+  const hw = 78 * fw;
   const crownY = 82;
   const foreheadY = 118;
   const cheekY = 152;
@@ -46,8 +32,7 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
   const exL = CX - eyeDX;
   const exR = CX + eyeDX;
 
-  // Pin the gradient id to the seed so output is byte-stable (svg.js otherwise
-  // assigns a global auto-incrementing id) and collision-free across foxes.
+  // svg.js otherwise assigns a global auto-incrementing gradient ID.
   const uid = (cfg.rngSeed >>> 0).toString(36);
   const coatGrad = canvas
     .gradient("linear", (add) => {
@@ -60,7 +45,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
 
   const edge = (w: number) => ({ color: p.line, width: w, linejoin: "round", linecap: "round" });
 
-  // ── Ears (behind the head) ──────────────────────────────────────────────────
   const earPts = (s: 1 | -1) => ({
     ox: CX + s * hw * 0.96,
     oy: foreheadY - 4,
@@ -106,7 +90,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
     }
   }
 
-  // ── Head ────────────────────────────────────────────────────────────────────
   const head =
     `M ${CX},${crownY} ` +
     `C ${r(CX + hw * 0.66)},${crownY} ${r(CX + hw)},${r(foreheadY - 16)} ${r(CX + hw)},${foreheadY} ` +
@@ -119,7 +102,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
     `C ${r(CX - hw)},${r(foreheadY - 16)} ${r(CX - hw * 0.66)},${crownY} ${CX},${crownY} Z`;
   canvas.path(head).fill(coatGrad).stroke(edge(4));
 
-  // ── Markings under the muzzle mask ───────────────────────────────────────────
   if (coat.pattern === "blaze") {
     canvas
       .polygon(
@@ -143,7 +125,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
     }
   }
 
-  // ── White muzzle + cheek mask ────────────────────────────────────────────────
   const mask =
     `M ${CX},${r(eyeY + 2)} ` +
     `C ${r(CX + hw * 0.52)},${r(eyeY - 2)} ${r(CX + hw * 0.72)},${r(cheekY - 6)} ${r(CX + hw * 0.62)},${r(cheekY + 16)} ` +
@@ -175,7 +156,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
     }
   }
 
-  // ── Eyes ────────────────────────────────────────────────────────────────────
   const exprMul =
     expression === "alert" ? 1.2 : expression === "sly" ? 0.5 : expression === "playful" ? 0.85 : 1;
 
@@ -230,7 +210,6 @@ export function drawFox(canvas: Svg, cfg: FoxConfig): void {
     }
   }
 
-  // ── Nose, mouth, whiskers ────────────────────────────────────────────────────
   const noseY = snoutTipY - 6;
   canvas
     .path(

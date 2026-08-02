@@ -44,7 +44,6 @@ async function copyUsage() {
 
 <template>
   <div class="code-section">
-    <!-- ── Install card ─────────────────────────────────── -->
     <div class="card">
       <span class="card-label">install</span>
       <div class="code-wrap">
@@ -86,11 +85,9 @@ async function copyUsage() {
       </div>
     </div>
 
-    <!-- ── Usage card ───────────────────────────────────── -->
     <div class="card">
       <span class="card-label">usage</span>
       <div class="code-wrap">
-        <!-- Shiki-highlighted once mounted; plain fallback while loading -->
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-if="usageHtml" class="shiki-wrap" v-html="usageHtml" />
         <pre v-else class="install-block plain">{{ usageCode }}</pre>
@@ -147,7 +144,6 @@ async function copyUsage() {
   }
 }
 
-/* ── Card ──────────────────────────────────────────────── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -167,7 +163,6 @@ async function copyUsage() {
   color: var(--muted);
 }
 
-/* ── Code blocks ───────────────────────────────────────── */
 .code-wrap {
   position: relative;
 }
@@ -208,7 +203,6 @@ async function copyUsage() {
   margin: 0;
 }
 
-/* ── Copy button ───────────────────────────────────────── */
 .copy-btn {
   position: absolute;
   top: 8px;

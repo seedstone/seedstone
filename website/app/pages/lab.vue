@@ -87,7 +87,6 @@ onBeforeUnmount(() => {
   <SiteNav />
   <div class="config-page">
     <div class="layout">
-      <!-- Left: preview + output -->
       <aside class="preview">
         <div ref="container" class="plugin-box" />
         <input
@@ -112,7 +111,6 @@ onBeforeUnmount(() => {
         <p v-else class="diff-empty">Move a slider — changed values show up here.</p>
       </aside>
 
-      <!-- Right: params -->
       <main v-if="loaded" class="params">
         <section v-for="section in sections" :key="section.title" class="group">
           <h2>{{ section.title }}</h2>

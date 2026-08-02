@@ -5,7 +5,6 @@ export type LabOptions = string[];
 export type LabControl = LabSlider | LabOptions;
 export type LabControls = Record<string, LabControl>;
 
-/** Build website tuning controls from a plugin's trait declaration. */
 export function buildLabControls(
   traits: Traits,
   ranges: Record<string, LabSlider> = {},

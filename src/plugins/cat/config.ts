@@ -1,12 +1,3 @@
-/**
- * Cat trait declaration and resolver for a deterministic flat-design cat bust.
- *
- * Built entirely on the core engine: declare each trait as `constant`, `seeded`,
- * or `pick`, hand the tree a seed, and `derive` resolves it. No three.js, no
- * canvas — a cat is just an SVG string. Flip any trait between fixed and
- * seed-driven by editing its constructor.
- */
-
 import {
   seeded,
   pick,

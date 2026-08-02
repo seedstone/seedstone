@@ -1,20 +1,11 @@
 import type { Override, Traits } from "./traits";
 import type { Plugin, View, CreateOptions } from "./contract";
 
-/** Identity helper — declare a plugin with full type inference. */
 export function definePlugin<T extends Traits, C>(plugin: Plugin<T, C>): Plugin<T, C> {
   return plugin;
 }
 
-/**
- * Mount a plugin and return a live view — the entry point for rendering any
- * plugin. The runtime resolves `target` (a CSS selector or an element),
- * validates the inputs, then invokes the plugin's `mount` hook. End users call
- * `create`; they never call `plugin.mount` directly.
- *
- *   const view = create(gem, "#avatar", "alice");
- *   const view = create(cat, el, "alice", { overrides: { coat: { hue: 120 } } });
- */
+/** Mounts a plugin into a DOM element. */
 export function create<T extends Traits, C>(
   plugin: Plugin<T, C>,
   target: string | HTMLElement,
@@ -32,9 +23,7 @@ export function create<T extends Traits, C>(
   return plugin.mount(container, seed, options);
 }
 
-/** Reusable string→div renderer for SVG/HTML plugins. Owns the container:
- *  holds seed + overrides + resolved config, recomputes and swaps `innerHTML`
- *  on `update`/`setOverrides`, and clears on `destroy`. */
+/** Mounts an SVG or HTML string renderer. */
 export function mountString<C, O extends object = object>(
   container: HTMLElement,
   seed: string,

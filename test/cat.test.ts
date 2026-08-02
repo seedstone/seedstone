@@ -20,7 +20,6 @@ describe("cat (core-only SVG)", () => {
     expect(svg.endsWith("</svg>")).toBe(true);
     expect(svg).toContain('viewBox="0 0 256 256"');
     expect(svg).toContain("aria-label=");
-    // procedural only — no external assets
     expect(svg).not.toContain("<image");
     expect(svg).not.toContain("href");
   });

@@ -1,4 +1,3 @@
-/* ── Reset & Base ──────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -7,8 +6,7 @@
   padding: 0;
 }
 
-/* Custom scrollbar — forces a layout scrollbar so backdrop-filter fixed elements
-   don't overlap the scrollbar track via Chrome's compositing layer order. */
+/* Prevent fixed backdrop filters from overlapping Chrome's scrollbar layer. */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -63,7 +61,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Nebula gradient behind everything ─────────────────────────────────────── */
 body::before {
   content: "";
   position: fixed;
@@ -75,7 +72,6 @@ body::before {
   z-index: 0;
 }
 
-/* ── Layout utilities ──────────────────────────────────────────────────────── */
 .wrap {
   max-width: var(--maxw);
   margin: 0 auto;
@@ -114,7 +110,6 @@ body::before {
   margin: 0;
 }
 
-/* ── Reveal animation ──────────────────────────────────────────────────────── */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -127,7 +122,6 @@ body::before {
   transform: none;
 }
 
-/* ── Eyebrow label ─────────────────────────────────────────────────────────── */
 .eyebrow {
   display: inline-flex;
   align-items: center;

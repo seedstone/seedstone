@@ -1,13 +1,3 @@
-/**
- * fox — trait declaration and resolver for a deterministic flat-design fox bust.
- *
- * Like the cat plugin, built on the core engine and rendered to SVG — but drawn with
- * the svg.js element API (see ./draw) rather than string concatenation, so the
- * exact same drawing code runs in the browser against the real DOM and headless
- * in Node via svgdom (see ./render). Flip any trait between fixed and seed-driven
- * by editing its constructor.
- */
-
 import {
   seeded,
   pick,

@@ -10,8 +10,6 @@ import {
   isPick,
 } from "../src/core/index";
 
-// A representative traits tree — no gem/three involvement, proving the engine
-// stands alone.
 const traits = {
   hue: seeded(0, 360),
   saturation: seeded(0.55, 1),
@@ -98,7 +96,6 @@ describe("core engine", () => {
   });
 
   it("merge with seeded() flips a constant back to seed-driven", () => {
-    // fov is constant — fixed for every seed
     expect(derive(traits, "alice").fov).toBe(35);
     const t = merge(traits, { fov: seeded(10, 80) });
     const a = derive(t, "alice").fov;
@@ -111,7 +108,6 @@ describe("core engine", () => {
   it("merge can pin a seed-driven choice and re-open it", () => {
     expect(derive(merge(traits, { cut: "spinel" }), "alice").cut).toBe("spinel");
     const reopened = merge(traits, { cut: pick(() => ["garnet", "spinel", "zircon"]) });
-    // back to seed-driven: at least one seed lands on a non-first option somewhere
     const cuts = new Set(["a", "b", "c", "d", "e"].map((s) => derive(reopened, s).cut));
     expect(cuts.size).toBeGreaterThan(1);
   });

@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { hslToHex } from "../../core/index";
 import type { GemConfig } from "./config";
 
-/** Every value that affects the baked texture, joined into a comparable key.
- *  If this is unchanged between updates, the PMREM bake can be skipped. */
 function envSignature(cfg: GemConfig): string {
   const e = cfg.environment;
   return [
@@ -30,17 +28,6 @@ function envSignature(cfg: GemConfig): string {
   ].join(",");
 }
 
-/**
- * The environment map the gem reflects and refracts — a dark dome studded with
- * bright HDR spots (the "studio lights" you see glinting off facets) and dim
- * fill spheres that tint the lower hemisphere.
- *
- * The dome and tinted spots take the accent light hues; the fills step through
- * hues starting from the gem's body hue.
- *
- * The PMREM generator and env scene are reused across updates: a re-bake only
- * happens when a value that affects the texture actually changed (`signature`).
- */
 export class Environment {
   private cfg: GemConfig["environment"];
   private pmrem: THREE.PMREMGenerator;
@@ -55,7 +42,6 @@ export class Environment {
     this._build(cfg);
   }
 
-  /** (Re)populate the env scene's meshes from the current config. */
   private _build(cfg: GemConfig): void {
     this._clearScene();
     this.cfg = cfg.environment;
@@ -118,7 +104,6 @@ export class Environment {
     this.signature = envSignature(cfg);
   }
 
-  /** Dispose and detach every mesh currently in the env scene. */
   private _clearScene(): void {
     for (const obj of this.envScene.children) {
       const mesh = obj as THREE.Mesh;
@@ -128,26 +113,18 @@ export class Environment {
     }
   }
 
-  /** Bake the env scene into a PMREM texture, disposing the previous bake two
-   *  frames later (after any in-flight renders referencing it complete). */
   private _bake(): THREE.Texture {
     const old = this.target;
     this.target = this.pmrem.fromScene(this.envScene, this.cfg.blurRadius);
+    // Let in-flight frames release the old texture before disposal.
     if (old) requestAnimationFrame(() => requestAnimationFrame(() => old.dispose()));
     return this.target.texture;
   }
 
-  /** Initial bake (construction path). */
   render(): THREE.Texture {
     return this._bake();
   }
 
-  /**
-   * Reconcile to a new config and return the texture to assign to
-   * `scene.environment`. Returns the existing texture untouched when nothing
-   * that affects the bake changed — otherwise rebuilds the meshes (reusing the
-   * generator) and re-bakes.
-   */
   update(cfg: GemConfig): THREE.Texture {
     if (envSignature(cfg) === this.signature) return this.target!.texture;
     this._build(cfg);

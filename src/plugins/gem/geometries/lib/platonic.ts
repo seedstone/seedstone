@@ -1,10 +1,7 @@
 import * as THREE from "three";
 import { extractFlatNormals } from "./geometry";
 
-// Cube (N=6): Three.js has no PolyhedronGeometry-based cube, so we supply the
-// 8 unit-sphere vertices and 12 CCW triangle indices. All (±1,±1,±1) corners sit
-// at distance √3, so PolyhedronGeometry normalises them uniformly onto the
-// circumsphere — cube faces remain flat. ✓
+// PolyhedronGeometry normalizes these cube vertices to the circumradius.
 const CUBE_VERTS = [
   -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1,
 ];
@@ -55,13 +52,7 @@ const GENERATORS: Record<number, (r: number) => THREE.BufferGeometry> = {
   20: (r) => new THREE.IcosahedronGeometry(r, 0),
 };
 
-/**
- * Regular (Platonic) polyhedron with exactly N faces.
- * Valid N: 4 (tetrahedron), 6 (hexahedron), 8 (octahedron),
- *          12 (dodecahedron), 20 (icosahedron).
- *
- * @param scale  Circumradius (default 0.65).
- */
+/** Builds a regular polyhedron with 4, 6, 8, 12, or 20 faces. */
 export function buildRegularPolyhedron(faces: number, scale = 0.65): THREE.BufferGeometry {
   const factory = GENERATORS[faces];
   if (!factory) {

@@ -5,24 +5,15 @@ import type { GemConfig } from "./config";
 
 type GemPart = GemConfig["gem"];
 
-/** The geometry is fully determined by the cut plus the distortion seeds — so a
- *  rebuild is only needed when one of those changes (not on a colour/material tweak). */
 function geometrySignature(gem: GemPart): string {
   const d = gem.distortion;
   return [gem.cut, d.perfection, d.scaleX, d.scaleY, d.scaleZ, d.noiseSeed].join(",");
 }
 
-/**
- * The gemstone itself: a physically-based transmission material plus a
- * barely-visible wireframe child that adds a hint of facet-edge definition.
- *
- * Colour and material values are patched in place on update; the geometry is
- * only rebuilt when the cut or distortion changes.
- */
 export class GemMesh {
   private cfg: GemPart;
   private mesh: THREE.Mesh;
-  private wireframe: THREE.Mesh; // child of mesh, shares its geometry
+  private wireframe: THREE.Mesh;
   private material: THREE.MeshPhysicalMaterial;
   private geometrySig: string;
 
@@ -32,7 +23,6 @@ export class GemMesh {
     const geometry = this._buildGeometry(gem);
     this.geometrySig = geometrySignature(gem);
 
-    // Every key in gem.material is a MeshPhysicalMaterial property.
     this.material = new THREE.MeshPhysicalMaterial({
       ...gem.material,
       metalness: 0.0,
@@ -64,8 +54,6 @@ export class GemMesh {
     return geometry;
   }
 
-  /** Patch the colour + every scalar material property in place (uniform-only
-   *  updates — no shader recompile). */
   private _applyMaterial(gem: GemPart): void {
     Object.assign(this.material, gem.material);
     this.material.color.setHSL(
@@ -82,7 +70,7 @@ export class GemMesh {
       const geometry = this._buildGeometry(gem);
       const old = this.mesh.geometry;
       this.mesh.geometry = geometry;
-      this.wireframe.geometry = geometry; // shared with the mesh
+      this.wireframe.geometry = geometry;
       old.dispose();
       this.geometrySig = sig;
     }

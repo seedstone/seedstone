@@ -1,29 +1,14 @@
-/**
- * Colour derivation for the fox — every swatch is computed from the coat hue, so
- * the whole animal shifts along one axis. A light/base coat pair drives a soft
- * top-down gradient; dark accents (ear tips, nose) and a pale belly give the
- * classic fox contrast. Uses the core `hslToHex` primitive — no local maths.
- */
-
 import { hslToHex } from "../../core/index";
 import type { FoxValues } from "./config";
 
-/** Every fill the drawing needs, as `#rrggbb` strings. */
 export interface Palette {
-  /** Coat gradient — lit top, base bottom. */
   coatLight: string;
   coat: string;
-  /** Pale muzzle, cheeks, chest, blaze. */
   belly: string;
-  /** Near-black accents — ear tips, nose. */
   dark: string;
-  /** Contour outline. */
   line: string;
-  /** Marking wash — mask, sooty, freckles. */
   ink: string;
-  /** Inner-ear pink. */
   earInner: string;
-  /** Left / right iris (right differs when an odd eye lands). */
   irisL: string;
   irisR: string;
 }
@@ -36,13 +21,12 @@ const hex = (h: number, s: number, l: number): string =>
     .toString(16)
     .padStart(6, "0");
 
-/** Build the full palette from resolved coat + eye traits. */
 export function buildPalette(v: FoxValues): Palette {
   const h = v.coat.hue;
   const s = v.coat.saturation;
   let l = v.coat.lightness;
 
-  if (v.coat.pattern === "sooty") l = Math.max(0.4, l - 0.05); // a touch darker base
+  if (v.coat.pattern === "sooty") l = Math.max(0.4, l - 0.05);
 
   const oddEye = v.eyes.odd > 0.85;
   const eyeR = oddEye ? v.eyes.hue + 140 : v.eyes.hue;

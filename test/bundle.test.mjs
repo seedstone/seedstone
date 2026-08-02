@@ -10,10 +10,6 @@ import {
   listCuts,
 } from "../dist/seedstone.esm.js";
 
-// Integration tests against the *built bundle* — they verify that the public
-// exports, the renamed engine API, and the geometry-glob transform all
-// survive the build. Engine internals are unit-tested from source in core.test.ts.
-
 const configSchema = gem.traits;
 
 const seededLeaves = (node, path = []) => {
@@ -55,7 +51,6 @@ describe("public engine", () => {
       expect(r.sparkles.count).toBe(50);
     }
 
-    // gem.material.transmission is constant — fixed until flipped.
     expect(derive(configSchema, "alice").gem.material.transmission).toBe(
       derive(configSchema, "bob").gem.material.transmission,
     );

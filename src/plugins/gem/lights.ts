@@ -7,17 +7,10 @@ type OrbitConfig = GemConfig["lights"]["orbits"][number];
 interface OrbitingLight {
   light: THREE.PointLight;
   cfg: OrbitConfig;
-  phase: number; // radians, from cfg.phaseDeg
-  speed: number; // cfg.speed * gem.speed
+  phase: number;
+  speed: number;
 }
 
-/**
- * The gem's light rig: point lights orbiting the gem (two tinted with the accent
- * hues), a rim light from below offset from the gem's hue, and a faint ambient.
- *
- * All properties are patched in place on update — the orbit count is fixed by
- * the schema, so the light objects never need rebuilding.
- */
 export class Lights {
   private cfg: GemConfig["lights"];
   private ambient: THREE.AmbientLight;
@@ -49,7 +42,6 @@ export class Lights {
     this._apply(cfg);
   }
 
-  /** Patch every light's colour/intensity/range from the config, in place. */
   private _apply(cfg: GemConfig): void {
     this.cfg = cfg.lights;
     const lights = cfg.lights;

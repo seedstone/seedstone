@@ -63,7 +63,6 @@ defineExpose({
   <header id="hero" class="hero">
     <div class="wrap">
       <div class="hero-grid">
-        <!-- Left: copy + forge field -->
         <div class="hero-copy">
           <span class="eyebrow"> Unique avatars, NFT art & digital identities </span>
           <h1 class="h1">
@@ -172,7 +171,6 @@ defineExpose({
           </div>
         </div>
 
-        <!-- Right: gem stage + genome panel -->
         <div class="hero-right">
           <div class="stage">
             <ClientOnly>

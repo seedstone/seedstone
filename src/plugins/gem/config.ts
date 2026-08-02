@@ -1,17 +1,3 @@
-/**
- * The gem plugin's trait declaration and resolver.
- *
- * Every visual and performance parameter expressed with `constant` / `seeded` /
- * `pick`. Flip any value between fixed and seed-driven by editing its constructor.
- * Each seeded value samples an independent hash of its dot-path and the seed.
- *
- * Units:
- *   hues                               degrees 0–360
- *   saturation / lightness / opacity   0–1
- *   distances / radii / positions      world units (gem radius ≈ 0.65)
- *   rates                              radians or cycles per second
- */
-
 import {
   constant,
   seeded,

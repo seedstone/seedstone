@@ -1,30 +1,13 @@
-/**
- * The drawing — a pure function from a resolved cat config to an SVG string.
- *
- * A soft, modern flat-mascot look on a transparent background: a face-forward
- * cat bust with a gently gradiented coat, big glossy eyes with catchlights, rosy
- * cheeks, and a tidy muzzle. The subject is a head-and-shoulders bust rather
- * than a full body, so it reads well at avatar sizes. The silhouette is fixed;
- * the seed scales it within bounds and swaps coat colour, markings, ear
- * carriage, eye colour, and expression — so every output is a valid cat.
- *
- * No external assets, no <image>. Gradients and the head clip-path carry a
- * per-cat id suffix so many inline cats can share a page without colliding.
- */
-
 import { mulberry32 } from "../../core/index";
 import type { CatValues } from "./config";
 import type { Palette } from "./palette";
 
-/** A cat ready to draw: resolved traits, palette, name, and a placement seed. */
 export interface CatConfig extends CatValues {
   palette: Palette;
   name: string;
-  /** Integer seed for marking placement (speckles, patch side). */
   rngSeed: number;
 }
 
-/** Round to 2dp; collapse -0 → 0. Keeps markup short and byte-stable. */
 function f(n: number): string {
   const r = Math.round(n * 100) / 100;
   return Object.is(r, -0) ? "0" : String(r);
@@ -34,7 +17,6 @@ const clamp = (n: number, lo: number, hi: number) => (n < lo ? lo : n > hi ? hi 
 
 const CX = 128;
 
-/** Build the complete `<svg>…</svg>` for a resolved cat config. */
 export function drawCat(config: CatConfig): string {
   const { coat, face, ears, eyes, whiskers, mood, palette: p } = config;
   const rng = mulberry32(config.rngSeed);
@@ -42,14 +24,13 @@ export function drawCat(config: CatConfig): string {
 
   const fw = face.width;
   const es = ears.size;
-  const hw = 80 * fw; // head half-width
-  const hh = 76; // head half-height
+  const hw = 80 * fw;
+  const hh = 76;
   const headCY = 134;
   const upright = ears.shape === "upright";
 
   const earBaseY = 98;
 
-  // ── Ears ──────────────────────────────────────────────────────────────────
   const ear = (s: 1 | -1): string => {
     const ox = CX + s * hw * 0.7;
     const ix = CX + s * hw * 0.18;
@@ -91,7 +72,6 @@ export function drawCat(config: CatConfig): string {
     return `<path d="M ${f(tx)},${f(ty)} l ${f(s * -2)},${f(-len)} m 3,${f(len * 0.25)} l ${f(s * -1.5)},${f(-len * 0.85)}" fill="none" stroke="${p.coat}" stroke-width="2.6" stroke-linecap="round"/>`;
   };
 
-  // ── Head + body ─────────────────────────────────────────────────────────────
   const head =
     `M ${f(CX)},${f(headCY - hh)} ` +
     `C ${f(CX + hw * 0.6)},${f(headCY - hh)} ${f(CX + hw)},${f(headCY - hh * 0.4)} ${f(CX + hw)},${f(headCY)} ` +
@@ -115,7 +95,6 @@ export function drawCat(config: CatConfig): string {
     );
   };
 
-  // ── Markings (clipped to head + ears) ────────────────────────────────────────
   const foreheadTop = headCY - hh + 14;
   let marks = "";
   if (coat.pattern === "striped") {
@@ -161,7 +140,6 @@ export function drawCat(config: CatConfig): string {
       `fill="${p.belly}" opacity="0.92"/>`;
   }
 
-  // ── Eyes ──────────────────────────────────────────────────────────────────
   const eyeY = headCY + 6;
   const eyeDX = hw * 0.4;
   const exL = CX - eyeDX;
@@ -206,7 +184,6 @@ export function drawCat(config: CatConfig): string {
         `</g>`
       : "";
 
-  // ── Nose, mouth, whiskers ────────────────────────────────────────────────────
   const noseY = headCY + 32;
   const nose =
     `<path d="M ${f(CX - 8)},${f(noseY)} Q ${f(CX)},${f(noseY - 3)} ${f(CX + 8)},${f(noseY)} ` +
@@ -241,7 +218,6 @@ export function drawCat(config: CatConfig): string {
   }
   const whiskerLines = `<g fill="none" stroke="${p.line}" stroke-width="1.1" stroke-linecap="round" opacity="0.45">${whiskerParts.join("")}</g>`;
 
-  // ── Assemble ─────────────────────────────────────────────────────────────────
   const earBack = upright ? p.coat : p.coatLight;
   const grad = `cg${uid}`;
   return (
@@ -250,32 +226,26 @@ export function drawCat(config: CatConfig): string {
     `<linearGradient id="${grad}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.coatLight}"/><stop offset="1" stop-color="${p.coat}"/></linearGradient>` +
     `<clipPath id="hd${uid}"><path d="${head}"/><path d="${ear(-1)}"/><path d="${ear(1)}"/></clipPath>` +
     `</defs>` +
-    // body
     `<path d="${body}" fill="url(#${grad})" stroke="${p.line}" stroke-width="3.5" stroke-linejoin="round"/>` +
     `<ellipse cx="${CX}" cy="248" rx="${f(hw * 0.44)}" ry="30" fill="${p.belly}"/>` +
-    // ears (behind head)
     `<path d="${ear(-1)}" fill="${earBack}" stroke="${p.line}" stroke-width="3.5" stroke-linejoin="round"/>` +
     `<path d="${ear(1)}" fill="${earBack}" stroke="${p.line}" stroke-width="3.5" stroke-linejoin="round"/>` +
     `<path d="${innerEar(-1)}" fill="${p.earInner}"/>` +
     `<path d="${innerEar(1)}" fill="${p.earInner}"/>` +
     tuft(-1) +
     tuft(1) +
-    // head
     `<path d="${head}" fill="url(#${grad})" stroke="${p.line}" stroke-width="4" stroke-linejoin="round"/>` +
     floof(-1) +
     floof(1) +
     `<g clip-path="url(#hd${uid})">${marks}</g>` +
-    // muzzle + cheeks
     `<ellipse cx="${CX}" cy="${f(noseY + 1)}" rx="${f(hw * 0.46)}" ry="22" fill="${p.belly}" opacity="0.92"/>` +
     `<ellipse cx="${f(CX - hw * 0.54)}" cy="${f(noseY - 4)}" rx="13" ry="7.5" fill="${p.blush}" opacity="0.5"/>` +
     `<ellipse cx="${f(CX + hw * 0.54)}" cy="${f(noseY - 4)}" rx="13" ry="7.5" fill="${p.blush}" opacity="0.5"/>` +
-    // face
     `<g>${brows}${eye(exL, -1, p.irisL)}${eye(exR, 1, p.irisR)}${nose}${mouth}${tongue}${whiskerLines}</g>` +
     `</svg>`
   );
 }
 
-/** Minimal attribute escaping for the aria-label text. */
 function escapeAttr(s: string): string {
   return s
     .replace(/&/g, "&amp;")

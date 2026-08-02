@@ -2,8 +2,6 @@ import { describe, it, expect } from "vitest";
 import { gemTraits, type GemConfig } from "../src/plugins/gem/config";
 import { derive } from "../src/core/index";
 
-// The renderer drives the gem scene from a resolved config, so the gem's traits
-// must resolve to the renderer/camera blocks the renderer reads.
 describe("gem config", () => {
   it("traits resolve to renderer + camera blocks", () => {
     const c = derive(gemTraits, "alice") as GemConfig;

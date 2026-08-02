@@ -1,7 +1,3 @@
-/**
- * @seedstone/gem — the gem plugin: render a 3D rotating gem from a string seed.
- */
-
 export { gem } from "./plugin";
 
 export { gemTraits } from "./config";

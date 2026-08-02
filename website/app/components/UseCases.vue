@@ -58,15 +58,13 @@ function destroyThumbnails(): void {
 function setupObserver(): void {
   io?.disconnect();
   destroyThumbnails();
-  // Build each thumbnail's gem only as it nears the viewport. These sit below
-  // the fold, so this keeps their (synchronous) construction off the critical
-  // first second, where it would otherwise starve the hero animation.
+  // Defer synchronous thumbnail creation until it enters the viewport.
   io = new IntersectionObserver(
     (entries) =>
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const el = entry.target as HTMLDivElement;
-        io!.unobserve(el); // build once
+        io!.unobserve(el);
         if (!el.isConnected) return;
         const s = el.clientWidth || 104;
         thumbnails.push(

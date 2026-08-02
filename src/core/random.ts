@@ -1,17 +1,12 @@
-/**
- * Deterministic primitives — the foundation of seed → output mapping.
- */
-
 function djb2(str: string): number {
   let h = 5381;
   for (let i = 0; i < str.length; i++) {
     h = ((h << 5) + h) ^ str.charCodeAt(i);
-    h = h >>> 0; // keep unsigned 32-bit
+    h = h >>> 0;
   }
   return h;
 }
 
-/** One mulberry32 scramble — decorrelates similar hash inputs. */
 function scramble(seed: number): number {
   let z = (seed + 0x6d2b79f5) >>> 0;
   z = Math.imul(z ^ (z >>> 15), z | 1);
@@ -19,22 +14,12 @@ function scramble(seed: number): number {
   return ((z ^ (z >>> 14)) >>> 0) / 0x100000000;
 }
 
-/**
- * Deterministic uniform float in [0, 1) for a seed + label pair.
- *
- * Each label hashes independently, so traits never influence each other:
- * adding, removing, or re-ordering sampled values leaves all others unchanged.
- * An empty seed falls back to 'seedstone'.
- */
+/** Returns a deterministic float in [0, 1) for an independently hashed label. */
 export function sampleUnit(seed: string, label: string): number {
   return scramble(djb2(`${label}:${seed.length === 0 ? "seedstone" : seed}`));
 }
 
-/**
- * mulberry32 — a tiny deterministic stream PRNG. Seed it with an integer and
- * call the returned function for a fresh uniform float in [0, 1) each time, so
- * the same seed always reproduces the same sequence (e.g. a sparkle scatter).
- */
+/** Returns a deterministic Mulberry32 stream seeded by an integer. */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
@@ -46,7 +31,6 @@ export function mulberry32(seed: number): () => number {
   };
 }
 
-/** Integer avalanche hash → uniform 32-bit unsigned int. */
 function hashU32(n: number): number {
   n = n >>> 0;
   n = Math.imul(((n >>> 16) ^ n) >>> 0, 0x45d9f3b) >>> 0;
@@ -54,7 +38,7 @@ function hashU32(n: number): number {
   return ((n >>> 16) ^ n) >>> 0;
 }
 
-/** Deterministic float in [0, 1) from two integers — stateless, indexable. */
+/** Returns a stateless deterministic float in [0, 1) from two integers. */
 export function hash2D(seed: number, i: number): number {
   return hashU32((seed * 65537 + i) >>> 0) / 4294967295;
 }

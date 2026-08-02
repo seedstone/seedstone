@@ -43,7 +43,6 @@ export function pushTri(
   uvs.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
 }
 
-/** Convert any Three.js indexed geometry to unindexed with flat (face) normals. */
 export function extractFlatNormals(geo: THREE.BufferGeometry, scale: number): THREE.BufferGeometry {
   const pos = geo.getAttribute("position") as THREE.BufferAttribute;
   const idx = geo.getIndex();

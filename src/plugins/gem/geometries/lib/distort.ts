@@ -1,16 +1,9 @@
 import * as THREE from "three";
 import { hash2D } from "../../../../core/random";
 
-// ── Tuning knobs ──────────────────────────────────────────────────────────────
-// Adjust these to change the range of distortion at perfection = 0.
-
-/** Max per-axis scale deviation from 1.0. 0.25 = ±25% stretch/squash. */
 export const MAX_SCALE_JITTER = 0.85;
 
-/** Max vertex displacement in model-space units. Gem radius is ~0.65. */
 export const MAX_VERTEX_NOISE = 0.15;
-
-// ── Scale distortion ──────────────────────────────────────────────────────────
 
 function applyScale(geo: THREE.BufferGeometry, sx: number, sy: number, sz: number): void {
   const pos = geo.attributes.position as THREE.BufferAttribute;
@@ -20,13 +13,7 @@ function applyScale(geo: THREE.BufferGeometry, sx: number, sy: number, sz: numbe
   pos.needsUpdate = true;
 }
 
-// ── Vertex noise ──────────────────────────────────────────────────────────────
-
-/**
- * Perturbs each unique vertex position by a seeded random displacement.
- * Vertices that share a position get the same displacement so face connectivity
- * is preserved — no gaps appear between adjacent faces.
- */
+/** Applies the same displacement to vertices that share a position. */
 function applyVertexNoise(geo: THREE.BufferGeometry, amplitude: number, seed: number): void {
   if (amplitude <= 0) return;
   const pos = geo.attributes.position as THREE.BufferAttribute;
@@ -50,44 +37,31 @@ function applyVertexNoise(geo: THREE.BufferGeometry, amplitude: number, seed: nu
   pos.needsUpdate = true;
 }
 
-// ── Public API ────────────────────────────────────────────────────────────────
-
 export interface Distortion {
-  /** 0 = rough/distorted, 1 = flawless. Scales both effects down to zero. */
   perfection: number;
-  /** Per-axis scale seeds (0–1). Combined with perfection. */
   scaleX: number;
   scaleY: number;
   scaleZ: number;
-  /** Seed for vertex noise directions (0–1). */
   noiseSeed: number;
 }
 
-/**
- * Applies scale and vertex distortions in-place, then recomputes flat normals.
- * At perfection=1 the geometry is untouched (both effects collapse to zero).
- */
 export function applyDistortions(geo: THREE.BufferGeometry, distortion: Distortion): void {
-  const p = distortion.perfection; // 0 = rough, 1 = perfect
+  const p = distortion.perfection;
 
-  // Capture original extents before any changes.
   geo.computeBoundingBox();
   const origSize = new THREE.Vector3();
   geo.boundingBox!.getSize(origSize);
 
-  // Non-uniform scale: each axis deviates from 1.0 proportionally to (1-perfection).
-  // Dividing by the geometric mean keeps volume constant — uniform scale = identity.
+  // Preserve volume while scaling each axis independently.
   const sx0 = 1 + (distortion.scaleX - 0.5) * 2 * MAX_SCALE_JITTER * (1 - p);
   const sy0 = 1 + (distortion.scaleY - 0.5) * 2 * MAX_SCALE_JITTER * (1 - p);
   const sz0 = 1 + (distortion.scaleZ - 0.5) * 2 * MAX_SCALE_JITTER * (1 - p);
   const gm = Math.cbrt(sx0 * sy0 * sz0);
   applyScale(geo, sx0 / gm, sy0 / gm, sz0 / gm);
 
-  // Vertex noise: amplitude shrinks to zero as perfection → 1
   applyVertexNoise(geo, MAX_VERTEX_NOISE * (1 - p), Math.floor(distortion.noiseSeed * 65536));
 
-  // Fit back into original bounding box: if any axis grew, uniformly scale down
-  // so the largest overrun sits exactly at the original extent.
+  // Keep the distorted geometry within its original bounds.
   geo.computeBoundingBox();
   const newSize = new THREE.Vector3();
   geo.boundingBox!.getSize(newSize);
@@ -98,6 +72,5 @@ export function applyDistortions(geo: THREE.BufferGeometry, distortion: Distorti
   );
   if (fit < 1) applyScale(geo, fit, fit, fit);
 
-  // Recompute flat normals after all spatial changes.
   geo.computeVertexNormals();
 }

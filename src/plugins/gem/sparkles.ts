@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { mulberry32 } from "../../core/index";
 
-/** The slice of config a Sparkles shell needs. Self-contained — no gem coupling. */
 export interface SparklesConfig {
   count: number;
-  scatterSeed: number; // 0–1 placement seed
+  scatterSeed: number;
   size: number;
   radiusMin: number;
   radiusRange: number;
@@ -14,13 +13,10 @@ export interface SparklesConfig {
   pulseAmount: number;
 }
 
-/** The point placement depends only on these — regenerate the buffer when they
- *  change, but skip it for a size/opacity tweak. */
 function positionSignature(s: SparklesConfig): string {
   return [s.count, s.scatterSeed, s.radiusMin, s.radiusRange].join(",");
 }
 
-/** A shell of tiny points floating around the scene, placed from scatterSeed. */
 export class Sparkles {
   private cfg: SparklesConfig;
   private points: THREE.Points;
@@ -51,7 +47,7 @@ export class Sparkles {
     for (let i = 0; i < s.count; i++) {
       const r = s.radiusMin + rand() * s.radiusRange;
       const theta = rand() * Math.PI * 2;
-      const phi = Math.acos(2 * rand() - 1); // uniform on the sphere
+      const phi = Math.acos(2 * rand() - 1);
       positions.setXYZ(
         i,
         r * Math.sin(phi) * Math.cos(theta),

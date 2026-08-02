@@ -1,39 +1,16 @@
-/**
- * The derivation engine
- *
- * Declare a tree of **traits** (each value either fixed or seed-driven), hand it
- * a seed, and `derive` resolves it to a plain config object. Every use case (the
- * gem, an SVG, a server thumbnail) starts here.
- *
- *   constant(value)   fixed — the same for every output (number OR string)
- *   seeded(min, max)  seed-driven scalar, sampled uniformly from [min, max)
- *   pick(options)     seed-driven choice from a list
- *
- * Flip a value between fixed and seed-driven by editing its constructor at the
- * declaration — `constant(200)` ⇄ `seeded(0, 360)`. Each seeded value samples an
- * independent hash of its dot-path and the seed, so adding, removing, or pinning
- * one never affects the others.
- */
-
 import { sampleUnit } from "./random";
 
-// ── Trait constructors ──────────────────────────────────────────────────────
-
-/** A fixed value — number or string — that derivation reads verbatim. */
 export interface ConstantTrait<V extends number | string = number | string> {
   readonly kind: "constant";
   readonly value: V;
 }
 
-/** A seed-driven scalar, sampled uniformly from [min, max). */
 export interface SeededTrait {
   readonly kind: "seeded";
   readonly min: number;
   readonly max: number;
 }
 
-/** A seed-driven categorical choice. The options list is read lazily, so it can
- *  come from a registry that is still populating when the traits are declared. */
 export interface PickTrait {
   readonly kind: "pick";
   readonly options: () => string[];
@@ -41,22 +18,17 @@ export interface PickTrait {
 
 export type Trait = ConstantTrait | SeededTrait | PickTrait;
 
-/** Fixed value — same for every seed. Pin a pinnable choice with `constant("garnet")`. */
 export function constant<V extends number | string>(value: V): ConstantTrait<V> {
   return { kind: "constant", value };
 }
 
-/** Seed-driven scalar sampled uniformly from [min, max). */
 export function seeded(min: number, max: number): SeededTrait {
   return { kind: "seeded", min, max };
 }
 
-/** Seed-driven choice from a list. */
 export function pick(options: () => string[]): PickTrait {
   return { kind: "pick", options };
 }
-
-// ── Guards ──────────────────────────────────────────────────────────────────
 
 export function isConstant(v: unknown): v is ConstantTrait {
   return typeof v === "object" && v !== null && (v as { kind?: unknown }).kind === "constant";
@@ -74,12 +46,8 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
-// ── Types ───────────────────────────────────────────────────────────────────
-
-/** A declaration tree: traits, nested groups, and raw passthrough values. */
 export type Traits = Record<string, unknown>;
 
-/** The resolved shape of a traits tree — every trait unwrapped to its value. */
 export type Config<T> =
   T extends ConstantTrait<infer V>
     ? V
@@ -93,14 +61,7 @@ export type Config<T> =
             ? { [K in keyof T]: Config<T[K]> }
             : T;
 
-/**
- * A deep-partial override tree. At any trait leaf, pass a trait constructor or
- * a plain primitive (shorthand for `constant(value)`):
- *   - `constant(v)` / raw `number | string` pins the value explicitly,
- *   - `seeded(min, max)` makes a scalar seed-driven (even over a constant),
- *   - `pick(options)` re-opens a pinned choice.
- * Plain-object branches recurse; arrays and primitive pass-throughs are unchanged.
- */
+/** A deep-partial trait tree. Raw numbers and strings become constants. */
 export type Override<T> = T extends Trait
   ? Trait | number | string
   : T extends readonly unknown[]
@@ -109,14 +70,7 @@ export type Override<T> = T extends Trait
       ? { [K in keyof T]?: Override<T[K]> }
       : T;
 
-// ── Resolution ──────────────────────────────────────────────────────────────
-
-/**
- * Resolve a traits tree to plain values. Constants collapse to their value;
- * seeded scalars/choices are sampled from the seed and the node's dot-path as
- * the hash label. Without a seed, seeded scalars resolve to their range midpoint
- * and choices to their first option (used for static defaults).
- */
+/** Resolves traits to plain values. Without a seed, uses midpoint/first-option defaults. */
 export function derive<T extends Traits>(traits: T, seed?: string): Config<T> {
   function resolve(node: unknown, path: string): unknown {
     if (isConstant(node)) return node.value;
@@ -142,12 +96,7 @@ export function derive<T extends Traits>(traits: T, seed?: string): Config<T> {
   return resolve(traits, "") as Config<T>;
 }
 
-/**
- * Apply an override tree onto traits, returning a new traits tree (then pass it
- * to `derive`). A plain number/string pins a leaf to a fixed value; a trait
- * (`constant`/`seeded`/`pick`) replaces the leaf outright — so a `seeded(min,max)`
- * override flips a constant back to seed-driven.
- */
+/** Returns a new trait tree with the supplied overrides applied. */
 export function merge<T extends Traits>(base: T, overrides: Override<T> = {} as Override<T>): T {
   function mergeNode(baseNode: unknown, patch: unknown): unknown {
     if (patch === undefined) return baseNode;

@@ -1,11 +1,3 @@
-/**
- * The fox plugin — mounts a live, seed-driven fox into a container.
- *
- * Browser path: svg.js draws straight into the real DOM (no svgdom). The View
- * owns the svg.js root, repaints on `update`/`setOverrides`, and tears down on
- * `destroy`. The headless string path lives in ./render.
- */
-
 import { SVG } from "@svgdotjs/svg.js";
 import { definePlugin, type View } from "../../core/index";
 import { foxTraits, resolveFox, type FoxTraits, type FoxOverrides } from "./config";
